@@ -44,7 +44,7 @@ Data Layout:
 - 2 byte CRC-16 poly 0x8005 init 0
 */
 
-static int oil_watchman_advanced_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oil_watchman_advanced_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static uint8_t const PREAMBLE_SYNC_LENGTH_BITS = 40;
     static uint8_t const HEADER_LENGTH_BITS        = 8;

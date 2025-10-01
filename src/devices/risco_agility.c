@@ -97,7 +97,7 @@ static int gray_decode(int n) {
     return p;
 }
 
-static int risco_agility_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int risco_agility_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitbuffer_t decoded = { 0 };
     uint8_t *b;

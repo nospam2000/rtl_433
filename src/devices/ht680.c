@@ -18,7 +18,7 @@ HT680 based Remote control (broadly similar to x1527 protocol).
 
 #include "decoder.h"
 
-static int ht680_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ht680_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t b[5]; // 36 bits

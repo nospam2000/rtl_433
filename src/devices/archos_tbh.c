@@ -57,7 +57,7 @@ Raw data frame (power index):
 
 #include "decoder.h"
 
-static int archos_tbh_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int archos_tbh_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {
             /*0xaa, 0xaa, */ 0xaa, 0xaa, // preamble

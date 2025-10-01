@@ -28,7 +28,7 @@ Data layout:
 
 #include "decoder.h"
 
-static int kw9015b_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int kw9015b_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int row;

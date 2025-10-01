@@ -32,7 +32,7 @@ Temp, not 2's complement but a dedicated sign-bit, i.e. 1 bit sign, 11 bit temp.
 
 #include "decoder.h"
 
-static int fineoffset_ws2032_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_ws2032_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x0a}; // 8 bits, 0xf5 inverted
 

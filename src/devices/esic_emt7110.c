@@ -40,7 +40,7 @@ A message is ca 131-132 bits including preamble.
 
 #include "decoder.h"
 
-static int esic_emt7110_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int esic_emt7110_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4};
 

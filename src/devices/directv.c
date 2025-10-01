@@ -272,7 +272,7 @@ static unsigned bitrow_dpwm_decode(uint8_t const *bitrow, unsigned bit_len, unsi
     return bitrow_buf_pos;
 }
 
-static int directv_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int directv_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int r;                   // a row index

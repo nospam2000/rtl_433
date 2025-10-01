@@ -31,7 +31,7 @@ Hyundai WS SENZOR Remote Temperature Sensor.
 #define WS_MINREPEATS 4
 #define WS_REPEATS 23
 
-static int wssensor_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int wssensor_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b;
     data_t *data;

@@ -32,7 +32,7 @@ Packet payload: 1 sync nibble and 8 bytes data, 17 nibbles:
 
 #include "decoder.h"
 
-static int schraeder_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int schraeder_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[8];
     int serial_id;
@@ -96,7 +96,7 @@ Probable packet payload:
 - T: temperature, degrees Fahrenheit
 - C: checksum, sum of byte data modulo 256
 */
-static int schrader_EG53MA4_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int schrader_EG53MA4_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t b[10];
@@ -220,7 +220,7 @@ Example payloads:
 #define NUM_BITS_DATA (NUM_BITS_FLAGS + NUM_BITS_ID + NUM_BITS_PRESSURE)
 #define NUM_BITS_TOTAL (NUM_BITS_PREAMBLE + 2 * NUM_BITS_DATA)
 
-static int schrader_SMD3MA4_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int schrader_SMD3MA4_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Reject wrong length, with margin of error for extra bits at the end
     if (bitbuffer->bits_per_row[0] < NUM_BITS_TOTAL

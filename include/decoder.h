@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "pulse_data.h"
 #include "r_device.h"
 #include "bitbuffer.h"
 #include "data.h"

@@ -17,7 +17,7 @@ CurrentCost TX, CurrentCost EnviR current sensors.
 
 @todo Documentation needed.
 */
-static int current_cost_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int current_cost_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitbuffer_t packet = {0};

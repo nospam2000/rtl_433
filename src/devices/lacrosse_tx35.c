@@ -155,7 +155,7 @@ static int lacrosse_it(r_device *decoder, bitbuffer_t *bitbuffer, int device29or
 Wrapper for the TX29 and TX25U device.
 @sa lacrosse_it()
 */
-static int lacrossetx29_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrossetx29_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     return lacrosse_it(decoder, bitbuffer, LACROSSE_TX29_MODEL);
 }
@@ -164,7 +164,7 @@ static int lacrossetx29_callback(r_device *decoder, bitbuffer_t *bitbuffer)
 Wrapper for the TX35 device.
 @sa lacrosse_it()
 */
-static int lacrossetx35_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrossetx35_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     return lacrosse_it(decoder, bitbuffer, LACROSSE_TX35_MODEL);
 }

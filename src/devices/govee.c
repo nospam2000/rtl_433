@@ -135,7 +135,7 @@ RevSum input for parity (first 5 bytes, and the parity extracted from the last b
 #define GOVEE_H5054_BYTELEN 6
 #define GOVEE_H5054_BITLEN  48
 
-static int govee_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int govee_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int model_num = GOVEE_WATER;
 
@@ -323,7 +323,7 @@ device.
 
 */
 
-static int govee_h5054_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int govee_h5054_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows < 3) {
         return DECODE_ABORT_EARLY;

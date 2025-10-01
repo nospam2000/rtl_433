@@ -198,7 +198,7 @@ static int fineoffset_wh1050_decode(r_device *decoder, bitbuffer_t *bitbuffer, u
 Fineoffset or TFA OOK/FSK protocol.
 @sa fineoffset_wh1050_decode()
 */
-static int fineoffset_wh1050_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_wh1050_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     unsigned bitpos = 0;
     int events      = 0;

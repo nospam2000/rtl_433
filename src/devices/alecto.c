@@ -96,7 +96,7 @@ static uint8_t bcd_decode8(uint8_t x)
     return ((x & 0xF0) >> 4) * 10 + (x & 0x0F);
 }
 
-static int alectov1_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int alectov1_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitrow_t *bb = bitbuffer->bb;
     uint8_t *b = bitbuffer->bb[1];

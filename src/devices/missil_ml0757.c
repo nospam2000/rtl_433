@@ -54,7 +54,7 @@ All packets begin with an empty row in addition to the 9 rows of repeated data.
 #define MISSIL_ML0757_FLAG_RWP  0x04 // Rain+Wind packet flag
 #define MISSIL_ML0757_FLAG_BAT  0x80 // Battery low flag
 
-static int missil_ml0757_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int missil_ml0757_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

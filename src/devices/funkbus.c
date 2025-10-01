@@ -98,7 +98,7 @@ static uint8_t calc_checksum(uint8_t const *bitrow, unsigned len)
     return result;
 }
 
-static int funkbus_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int funkbus_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int events = 0;
 

@@ -59,7 +59,7 @@ static uint8_t tx8300_chk(uint8_t *b)
     return c0 << 4 | c1;
 }
 
-static int ambientweather_tx8300_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ambientweather_tx8300_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t b[9] = {0};

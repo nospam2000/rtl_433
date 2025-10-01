@@ -48,7 +48,7 @@ device, see fineoffset.c.
 
 #include "decoder.h"
 
-static int wg_pb12v1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int wg_pb12v1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Validate package
     uint8_t *b = bitbuffer->bb[0];

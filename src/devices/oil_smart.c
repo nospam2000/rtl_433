@@ -107,7 +107,7 @@ static int oil_smart_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigned 
 Oil tank monitor using manchester encoded FSK protocol with CRC.
 @sa oil_smart_decode()
 */
-static int oil_smart_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oil_smart_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[2] = {0x55, 0x58};
     // End of frame is the last half-bit repeated additional 2 times, then 4 times mark.

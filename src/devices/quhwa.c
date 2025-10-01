@@ -18,7 +18,7 @@ also sold as "1 by One" wireless doorbell
 
 #include "decoder.h"
 
-static int quhwa_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int quhwa_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 5, 18);
     if (r < 0)

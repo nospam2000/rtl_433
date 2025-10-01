@@ -14,7 +14,7 @@ Mebus 433.
 
 @todo Documentation needed.
 */
-static int mebus433_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int mebus433_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitrow_t *bb = bitbuffer->bb;
     int16_t temp;

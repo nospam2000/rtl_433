@@ -9,6 +9,7 @@
     (at your option) any later version.
 */
 
+#include "pulse_data.h"
 #include "decoder_util.h"
 #include <stdlib.h>
 #include <stdio.h>

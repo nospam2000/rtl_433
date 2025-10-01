@@ -47,7 +47,7 @@ static int validate_checksum(r_device *decoder, uint8_t *b, int from, int to, in
     return !chk;
 }
 
-static int vaillant_vrt340_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int vaillant_vrt340_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b = bitbuffer->bb[0];
 

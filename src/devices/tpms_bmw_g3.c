@@ -49,7 +49,7 @@ Data layout {81} 10 x 8 (Gen2):
 
 #include "decoder.h"
 
-static int tpms_bmwg3_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_bmwg3_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitbuffer_t decoded = { 0 };
     uint8_t *b;

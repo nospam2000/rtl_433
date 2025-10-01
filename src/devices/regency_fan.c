@@ -66,7 +66,7 @@ and ANDing the result with 0x0f.
 
 */
 
-static int regency_fan_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int regency_fan_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     char const *const command_names[] = {
             /* 0  */ "invalid",

@@ -47,7 +47,7 @@ Pairing packet (4 bytes)
 
 */
 
-static int celsia_czc1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int celsia_czc1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xcc, 0xcc, 0xcc, 0xcc, 0x55, 0x55, 0x55, 0x55};
     // data section in command packet == 160 bits

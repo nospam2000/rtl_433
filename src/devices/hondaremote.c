@@ -30,7 +30,7 @@ static char const *get_command_codes(const uint8_t *bytes)
     }
 }
 
-static int hondaremote_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int hondaremote_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

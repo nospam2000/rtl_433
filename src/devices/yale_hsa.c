@@ -60,7 +60,7 @@ Get Raw data with:
 
 */
 
-static int yale_hsa_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int yale_hsa_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Require at least 6 rows
     if (bitbuffer->num_rows < 6)

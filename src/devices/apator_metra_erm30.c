@@ -62,7 +62,7 @@ static void extract_id(uint8_t *p, uint8_t *m, char *id_str);
 static void extract_volume(uint8_t *p, uint8_t *m, char *volume_str);
 static void extract_date(uint8_t *p, uint8_t *m, char *date_str);
 
-static int apator_metra_erm30_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int apator_metra_erm30_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {
         /* 0x55, ..., 0x55, */ 0x55, 0x55,  // preamble

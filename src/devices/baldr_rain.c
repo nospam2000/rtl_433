@@ -44,7 +44,7 @@ The data is grouped in 9 nibbles:
 - R : 20 bit rain in inch/1000
 
 */
-static int baldr_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int baldr_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 36);
     if (r < 0) {

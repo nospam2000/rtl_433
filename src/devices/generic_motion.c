@@ -30,7 +30,7 @@ with a repeat gap of 4 pulse widths, i.e.:
 
 #include "decoder.h"
 
-static int generic_motion_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int generic_motion_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     for (int i = 0; i < bitbuffer->num_rows; ++i) {
         uint8_t *b = bitbuffer->bb[i];

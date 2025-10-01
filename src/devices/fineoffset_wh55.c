@@ -43,7 +43,7 @@ Format string:
 
 */
 
-static int fineoffset_wh55_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_wh55_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4, 0x55}; // part of preamble, sync word, and message type
 

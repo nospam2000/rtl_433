@@ -31,7 +31,7 @@ Actually 37 bits for all but last transmission which is 36 bits.
 
 #include "decoder.h"
 
-static int springfield_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int springfield_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int ret = 0;
     unsigned tmpData;

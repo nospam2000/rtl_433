@@ -53,7 +53,7 @@ Decoder written by Dmitriy Kozyrev, 2020
 #define INKBIRD_ITH20R_CRC_INIT 0x86F4  // reflected 0x2f61
 
 
-static int inkbird_ith20r_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int inkbird_ith20r_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0xaa, 0x2d, 0xd4};
 

@@ -143,7 +143,7 @@ static char const *acurite_getChannel(uint8_t byte)
 Acurite 896 rain gauge
 
 */
-static int acurite_rain_896_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_rain_896_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const *b = bitbuffer->bb[0];
     int id;
@@ -194,7 +194,7 @@ Acurite 609 Temperature and Humidity Sensor.
 
 @todo - see if the 3rd nybble is battery/status
 */
-static int acurite_th_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_th_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const *bb = NULL;
     int cksum, battery_low, valid = 0;
@@ -1229,7 +1229,7 @@ These devices have a message type in the 3rd byte and an 8 bit checksum
 in the last byte.
 
 */
-static int acurite_txr_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_txr_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int decoded = 0;
     int error_ret = 0;
@@ -1496,7 +1496,7 @@ Data Format - 5 bytes, sent LSB first, reversed:
 leaving some of the debugging code until the missing
 bit issue gets resolved.
 */
-static int acurite_986_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_986_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int const browlen = 5;
     uint8_t sensor_num, status, crc, crcc;
@@ -1617,7 +1617,7 @@ Message format:
 - K = Checksum (8 bits)
 - f = Final bit (== 0 for Acurite sensor, == !B for Technoline sensor)
 */
-static int acurite_606_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_606_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b;
     int row;
@@ -1684,7 +1684,7 @@ A transmission contains 14 repeats.
 We'll read the packet after the sync and treat the next sync as a trailing 0 bit
 
 */
-static int acurite_590tx_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_590tx_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row = bitbuffer_find_repeated_row(bitbuffer, 3, 25); // expected are min 3 rows
     if (row < 0)
@@ -1751,7 +1751,7 @@ static int acurite_590tx_decode(r_device *decoder, bitbuffer_t *bitbuffer)
 Acurite 00275rm Room Monitor sensors
 
 */
-static int acurite_00275rm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_00275rm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int result = 0;
     bitbuffer_invert(bitbuffer);

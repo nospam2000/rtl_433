@@ -261,7 +261,7 @@ static int geo_minim_display_decode(r_device *decoder, bitbuffer_t *bitbuffer, u
 #define MLEN_DISPLAY 0x2a
 #define MLEN_CT 0x05
 
-static int minim_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int minim_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble and sync can be aaaa7bb9 or 55557bb9
     uint8_t const preamble1[] = { 0xaa, 0xaa, 0x7b, 0xb9 };

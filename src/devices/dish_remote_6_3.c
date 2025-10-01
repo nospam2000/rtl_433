@@ -97,7 +97,7 @@ char const *button_map[] = {
 /* 63 */ "Info"
 };
 
-static int dish_remote_6_3_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int dish_remote_6_3_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int r; // a row index

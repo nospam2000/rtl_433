@@ -193,7 +193,7 @@ Various Oregon Scientific protocols.
 
 @todo Documentation needed.
 */
-static int oregon_scientific_v2_1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oregon_scientific_v2_1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const *b = bitbuffer->bb[0];
 
@@ -617,7 +617,7 @@ Various Oregon Scientific protocols.
 
 @todo Documentation needed.
 */
-static int oregon_scientific_v3_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oregon_scientific_v3_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b = bitbuffer->bb[0];
 
@@ -965,11 +965,11 @@ static int oregon_scientific_v3_decode(r_device *decoder, bitbuffer_t *bitbuffer
 Various Oregon Scientific protocols.
 @sa oregon_scientific_v2_1_decode() oregon_scientific_v3_decode()
 */
-static int oregon_scientific_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oregon_scientific_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
-    int ret = oregon_scientific_v2_1_decode(decoder, bitbuffer);
+    int ret = oregon_scientific_v2_1_decode(decoder, bitbuffer, pulses);
     if (ret <= 0) {
-        ret = oregon_scientific_v3_decode(decoder, bitbuffer);
+        ret = oregon_scientific_v3_decode(decoder, bitbuffer, pulses);
     }
     return ret;
 }

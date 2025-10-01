@@ -45,7 +45,7 @@ Quinetic Switches and Sensors.
 
 #include "decoder.h"
 
-static int quinetic_switch_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int quinetic_switch_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
 
     if (bitbuffer->bits_per_row[0] < 110 || bitbuffer->bits_per_row[0] > 140) {

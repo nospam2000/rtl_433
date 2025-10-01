@@ -127,7 +127,7 @@ static int tpms_tyreguard400_decode(r_device *decoder, bitbuffer_t *bitbuffer, u
 }
 
 /** @sa tpms_tyreguard400_decode() */
-static int tpms_tyreguard400_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_tyreguard400_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     //uint8_t const tyreguard_frame_sync[] = {0xf, 0xd5, 0xfd, 0x5f}
     uint8_t const tyreguard_frame_sync[] = {0xfd, 0x5f, 0xd5, 0xf0}; // needs to shift sync to align bytes 28x bits useful

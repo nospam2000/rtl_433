@@ -79,7 +79,7 @@ Audi Pressure Alert:
 
 #include "decoder.h"
 
-static int tpms_bmw_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_bmw_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitbuffer_t decoded = { 0 };
     uint8_t *b;

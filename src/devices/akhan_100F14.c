@@ -20,7 +20,7 @@ Note: simple 24 bit fixed ID protocol (x1527 style) and should be handled by the
 
 #include "decoder.h"
 
-static int akhan_rke_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int akhan_rke_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

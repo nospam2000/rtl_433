@@ -114,7 +114,7 @@ static int tpms_ave_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigned r
 Wrapper for the AVE tpms.
 @sa tpms_ave_decode()
 */
-static int tpms_ave_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_ave_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xcc, 0xcc, 0xcc, 0xcd}; // Raw pattern, before differential Manchester coding
 

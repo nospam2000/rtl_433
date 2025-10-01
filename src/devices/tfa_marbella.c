@@ -39,7 +39,7 @@ L - lsfr, byte reflected reverse galois with 0x31 key and generator
 
 #include "decoder.h"
 
-static int tfa_marbella_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tfa_marbella_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     unsigned bitpos = 0;
     uint8_t msg[11];

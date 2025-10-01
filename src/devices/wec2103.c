@@ -41,7 +41,7 @@ Example datagram:
 - Example: 82.4F->824->1724->0x6bc
 */
 
-static int wec2103_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int wec2103_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 6 || bitbuffer->bits_per_row[2] != 42) {
         return DECODE_ABORT_LENGTH;

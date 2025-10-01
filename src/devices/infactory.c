@@ -64,7 +64,7 @@ static int infactory_crc_check(uint8_t *b)
     return (crc == msg_crc);
 }
 
-static int infactory_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int infactory_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->bits_per_row[0] != 40)
         return DECODE_ABORT_LENGTH;

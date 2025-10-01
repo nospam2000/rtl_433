@@ -249,7 +249,7 @@ static uint8_t deltadore_x3d_parse_message_payload(uint8_t *buffer, struct delta
     return 12;
 }
 
-static int deltadore_x3d_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int deltadore_x3d_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {
             /*0xaa, 0xaa, */ 0xaa, 0xaa, // preamble

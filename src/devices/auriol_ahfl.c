@@ -30,7 +30,7 @@ Lidl Auriol Auriol AHFL 433B2 IPX4
 
 #include "decoder.h"
 
-static int auriol_ahfl_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int auriol_ahfl_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

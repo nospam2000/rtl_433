@@ -38,7 +38,7 @@ The data is grouped in 5 bytes / 10 nibbles
 */
 #include "decoder.h"
 
-static int bresser_3ch_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bresser_3ch_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

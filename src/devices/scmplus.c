@@ -25,7 +25,7 @@ Units: "Some meter types transmit consumption in 1 kWh units, while others use m
 
 */
 
-static int scmplus_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int scmplus_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[16];
     data_t *data;

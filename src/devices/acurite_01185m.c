@@ -51,7 +51,7 @@ Data layout:
 
 */
 
-static int acurite_01185m_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int acurite_01185m_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int result = 0;
     bitbuffer_invert(bitbuffer);

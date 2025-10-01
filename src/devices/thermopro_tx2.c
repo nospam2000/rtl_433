@@ -38,7 +38,7 @@ The data is grouped in 9 nibbles
 - humi: 8 bit always 11001100 (0xCC) if no humidity sensor is available
 
 */
-static int thermopro_tx2_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tx2_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b;
     data_t *data;

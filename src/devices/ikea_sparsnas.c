@@ -134,7 +134,7 @@ static uint32_t ikea_sparsnas_brute_force_encryption(uint8_t buffer[18])
     return 0;
 }
 
-static int ikea_sparsnas_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ikea_sparsnas_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[4] = {0xAA, 0xAA, 0xD2, 0x01};
 
@@ -236,7 +236,7 @@ static int ikea_sparsnas_decode(r_device *decoder, bitbuffer_t *bitbuffer)
     //Value extraction and interpretation
     uint16_t sequence_number = (decrypted[9] << 8 | decrypted[10]);
     uint16_t effect = (decrypted[11] <<  8 | decrypted[12]);
-    uint32_t pulses = ((unsigned)decrypted[13] << 24 | decrypted[14] << 16 | decrypted[15] << 8 | decrypted[16]);
+    uint32_t pulseCount = ((unsigned)decrypted[13] << 24 | decrypted[14] << 16 | decrypted[15] << 8 | decrypted[16]);
     uint8_t battery =  decrypted[17];
     //float watt = effect * 24.;
     uint8_t mode = decrypted[4]^0x0f;
@@ -246,7 +246,7 @@ static int ikea_sparsnas_decode(r_device *decoder, bitbuffer_t *bitbuffer)
     //} else if (mode == 0) { // special mode for low power usage
     //  watt = effect * 0.24 / ikea_sparsnas_pulses_per_kwh;
     //}
-    float cumulative_kWh = ((float)pulses) / ((float)ikea_sparsnas_pulses_per_kwh);
+    float cumulative_kWh = ((float)pulseCount) / ((float)ikea_sparsnas_pulses_per_kwh);
 
     /* clang-format off */
     data_t *data = data_make(
@@ -257,7 +257,7 @@ static int ikea_sparsnas_decode(r_device *decoder, bitbuffer_t *bitbuffer)
             "pulses_per_kWh", "Pulses per kWh",     DATA_INT,    ikea_sparsnas_pulses_per_kwh,
             "cumulative_kWh", "Cumulative kWh",     DATA_FORMAT, "%7.3fkWh", DATA_DOUBLE,  cumulative_kWh,
             "effect",        "Effect",              DATA_FORMAT, "%dW", DATA_INT,  effect,
-            "pulses",        "Pulses",              DATA_INT,    pulses,
+            "pulses",        "Pulses",              DATA_INT,    pulseCount,
             "mode",          "Mode",                DATA_INT,    mode,
             "mic",           "Integrity",           DATA_STRING, "CRC",
             NULL);

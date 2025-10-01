@@ -46,7 +46,7 @@ Type 2 messages usually contain long runs of zeros that might cause bitstream de
 
 #include "decoder.h"
 
-static int flowis_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int flowis_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {
             /*0xaa, 0xaa, */ 0xaa, 0xaa, // preamble

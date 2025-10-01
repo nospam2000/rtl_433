@@ -109,7 +109,7 @@ static int tpms_kia_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigned r
 Wrapper for the Kia tpms.
 @sa tpms_kia_decode()
 */
-static int tpms_kia_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_kia_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[2] = {0xed, 0x71};
     const int preamble_length         = 16;

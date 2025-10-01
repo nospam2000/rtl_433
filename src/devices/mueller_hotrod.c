@@ -48,7 +48,7 @@ Data layout:
 
 */
 
-static int mueller_hotrod_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int mueller_hotrod_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xfe, 0xb1, 0x00};
 

@@ -40,7 +40,7 @@ note that the mentioned quaternary conversion is actually manchester code.
 
 #include "decoder.h"
 
-static int maverick_et73x_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int maverick_et73x_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitbuffer_t mc = {0};

@@ -72,7 +72,7 @@ static int tpms_nissan_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigne
 }
 
 /** @sa tpms_nissan_decode() */
-static int tpms_nissan_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_nissan_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble is f5 55 55 55 e
     uint8_t const preamble_pattern[5] = {0xf5, 0x55, 0x55, 0x55, 0xe0}; // 36 bits

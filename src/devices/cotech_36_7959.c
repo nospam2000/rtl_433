@@ -54,7 +54,7 @@ Data format:
 
 */
 
-static int cotech_36_7959_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int cotech_36_7959_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x01, 0x40}; // 12 bits
 

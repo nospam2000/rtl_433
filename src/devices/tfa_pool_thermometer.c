@@ -25,7 +25,7 @@ TFA pool temperature sensor.
 
 #include "decoder.h"
 
-static int tfa_pool_thermometer_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tfa_pool_thermometer_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

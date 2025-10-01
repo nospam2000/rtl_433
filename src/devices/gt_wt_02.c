@@ -106,7 +106,7 @@ static int gt_wt_02_process_row(r_device *decoder, bitbuffer_t *bitbuffer, int r
 }
 
 /** @sa gt_wt_02_process_row() */
-static int gt_wt_02_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int gt_wt_02_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int counter = 0;
     // iterate through all rows, return on first successful

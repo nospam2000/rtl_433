@@ -86,7 +86,7 @@ static int lacrossews_detect(r_device *decoder, uint8_t *pRow, uint8_t *msg_nybb
     return 1;
 }
 
-static int lacrossews_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrossews_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row;
     int events = 0;

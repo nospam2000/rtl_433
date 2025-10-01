@@ -46,7 +46,7 @@ Published range of device is -29.9C to 69.9C
 #define MYDEVICE_BITLEN      14
 #define MYDEVICE_MINREPEATS  3
 
-static int companion_wtr001_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int companion_wtr001_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
 
     data_t *data;

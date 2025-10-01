@@ -53,7 +53,7 @@ Bytes 2 to 9 are inverted Manchester with swapped MSB/LSB:
 
 #include "decoder.h"
 
-static int steelmate_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int steelmate_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x00, 0x00, 0x7f}; // inverted, raw value is 0x5a
     //Loop through each row of data

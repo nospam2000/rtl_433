@@ -42,7 +42,7 @@ The second pack of 16 bits is interwoven:
 
 #include "decoder.h"
 
-static int markisol_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int markisol_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t buf[5];
     uint8_t cksum = 0;

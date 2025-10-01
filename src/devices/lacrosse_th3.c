@@ -63,7 +63,7 @@ Sequence# 0,1,3,4,5 & 7
 
 #include "decoder.h"
 
-static int lacrosse_th_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_th_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xd2, 0xaa, 0x2d, 0xd4};
 

@@ -34,7 +34,7 @@ Example codes:
     55555554985a8ef0b01004fa89af4878040ec681fe1859ced74714c7e82f349a7000000000
 
 */
-static int simplisafe_gen3_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int simplisafe_gen3_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x93, 0x0b, 0x51, 0xde}; // 32 bit
 

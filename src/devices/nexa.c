@@ -25,7 +25,7 @@ since the Nexa uses two different bit lengths for ON and OFF.
 
 #include "decoder.h"
 
-static int nexa_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int nexa_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
 

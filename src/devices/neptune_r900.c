@@ -78,7 +78,7 @@ static void decode_5to8(bitbuffer_t *bytes, uint8_t *base6_dec)
     }
 }
 
-static int neptune_r900_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int neptune_r900_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // partial preamble and sync word shifted by 1 bit
     uint8_t const preamble[] = {0x55, 0x55, 0x55, 0xa9, 0x66, 0x69, 0x65};

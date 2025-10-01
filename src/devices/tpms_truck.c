@@ -97,7 +97,7 @@ static int tpms_truck_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigned
 }
 
 /** @sa tpms_truck_decode() */
-static int tpms_truck_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_truck_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble
     uint8_t const preamble_pattern[3] = {0xaa, 0xaa, 0xa9}; // after invert

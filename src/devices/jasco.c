@@ -19,7 +19,7 @@ Packets are 32 bit, 24 bit data and 8 bit XOR checksum.
 
 #include "decoder.h"
 
-static int jasco_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int jasco_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xfc, 0x0c}; // length 16
 

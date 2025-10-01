@@ -28,7 +28,7 @@ a packet is made of 72 bits
 
 #include "decoder.h"
 
-static int nice_flor_s_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int nice_flor_s_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 2 || bitbuffer->bits_per_row[1] != 0) {
         return DECODE_ABORT_EARLY;

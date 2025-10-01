@@ -45,7 +45,7 @@ https://web.archive.org/web/20090828043201/http://www.openamr.org/wiki/ItronERTM
 
 */
 
-static int ert_scm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ert_scm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // TODO: Verify preamble
     //static const uint8_t ERT_PREAMBLE[]  = {/*0xF*/ 0x2A, 0x60};

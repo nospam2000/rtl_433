@@ -61,7 +61,7 @@ http://lucsmall.com/2012/04/29/weather-station-hacking-part-2/
 #define MODEL_WH5 5
 #define MODEL_RB 6
 #define MODEL_TP 7
-static int fineoffset_WH2_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH2_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     void *user_data = decoder_user_data(decoder);
     bitrow_t *bb = bitbuffer->bb;
@@ -190,7 +190,7 @@ The WH65B sends the same data with a slightly longer preamble and postamble
  */
 #define MODEL_WH24 24 /* internal identifier for model WH24, family code is always 0x24 */
 #define MODEL_WH65B 65 /* internal identifier for model WH65B, family code is always 0x24 */
-static int fineoffset_WH24_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH24_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4}; // part of preamble and sync word
@@ -380,7 +380,7 @@ BitBench Examples
 Preamble: aa2dd4
 FAM:8d ID: 8h 1b Bat_MSB:1d PMTWO:14d Bat_LSB:2d PMTEN:14d CRC:8h BITSIM:8h bbbbb
 */
-static int fineoffset_WH0290_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH0290_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4};
@@ -460,7 +460,7 @@ WH32B is the same as WH25 but two packets in one transmission of {971} and XOR s
     TYPE:4h ID:8d FLAGS:2b TEMP_C:10d HUM:8d HPA:16d CHK:8h
 
 */
-static int fineoffset_WH25_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH25_callback(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4};
@@ -471,14 +471,14 @@ static int fineoffset_WH25_callback(r_device *decoder, bitbuffer_t *bitbuffer)
     // Validate package
     if (bitbuffer->bits_per_row[0] < 160) {
         // Nominal length of WH0290 is 129 bits
-        return fineoffset_WH0290_callback(decoder, bitbuffer); // abort and try WH0290
+        return fineoffset_WH0290_callback(decoder, bitbuffer, pulses); // abort and try WH0290
     }
     else if (bitbuffer->bits_per_row[0] < 190) {
         // Nominal length of WN32B is 173 bits
         type = 32; // new WN32B
     }
     else if (bitbuffer->bits_per_row[0] < 440) {             // Nominal size is 488 bit periods
-        return fineoffset_WH24_callback(decoder, bitbuffer); // abort and try WH24, WH65B, HP1000
+        return fineoffset_WH24_callback(decoder, bitbuffer, pulses); // abort and try WH24, WH65B, HP1000
     }
 
     if (bitbuffer->bits_per_row[0] > 510) { // WH32B has nominal size of 971 bit periods
@@ -504,7 +504,7 @@ static int fineoffset_WH25_callback(r_device *decoder, bitbuffer_t *bitbuffer)
     else if (msg_type != 0xe0) {
         decoder_logf(decoder, 1, __func__, "Msg type unknown: %02x", b[0]);
         if (b[0] == 0x41) {
-            return fineoffset_WH0290_callback(decoder, bitbuffer); // abort and try WH0290
+            return fineoffset_WH0290_callback(decoder, bitbuffer, pulses); // abort and try WH0290
         }
         return DECODE_ABORT_EARLY;
     }
@@ -591,7 +591,7 @@ Short explanation:
 - If sensor-calculated moisture percentage are inaccurate at low/high values, use the AD value and the above formaula
   changing 0%AD and 100%AD to cover the full scale from dry to damp
 */
-static int fineoffset_WH51_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH51_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t const preamble[] = {0xAA, 0x2D, 0xD4};
@@ -680,7 +680,7 @@ Format string:
 
     PRE:7b TYPE:4b ID:8b BATT:1b ?:1b T:10d R:<16d ?:8h CRC:8h
 */
-static int alecto_ws1200v1_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int alecto_ws1200v1_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitrow_t *bb = bitbuffer->bb;
@@ -751,7 +751,7 @@ Format string:
     PRE:7b TYPE:8b ID:8b BATT:1b ?:1b ?:8b YY:4d YY:4d MM:4d MM:4d DD:4d DD:4d HH:4d HH:4d MM:4d MM:4d SS:4d SS:4d ?:16b
 
 */
-static int alecto_ws1200v2_dcf_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int alecto_ws1200v2_dcf_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitrow_t *bb = bitbuffer->bb;
@@ -832,7 +832,7 @@ Format string:
 
     PRE:7b TYPE:4b ID:8b BATT:1b ?:1b T:10d R:<16d ?:8h CRC:8h MAC:8h DATE:24b
 */
-static int alecto_ws1200v2_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int alecto_ws1200v2_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitrow_t *bb = bitbuffer->bb;
@@ -842,7 +842,7 @@ static int alecto_ws1200v2_callback(r_device *decoder, bitbuffer_t *bitbuffer)
     if (bitbuffer->bits_per_row[0] != 95 // Match exact length to avoid false positives
             || (bb[0][0] >> 1) != 0x7F   // Check preamble (7 bits)
             || (bb[0][1] >> 5) != 0x3)   // Check message type (8 bits)
-        return alecto_ws1200v2_dcf_callback(decoder, bitbuffer);
+        return alecto_ws1200v2_dcf_callback(decoder, bitbuffer, pulses);
 
     bitbuffer_extract_bytes(bitbuffer, 0, 7, b, sizeof (b) * 8); // Skip first 7 bits
 
@@ -901,7 +901,7 @@ Data layout:
 - C: 8 bit CRC-8 with poly 0x31 init 0x00
 - A: 8 bit Checksum of previous 7 bytes (addition truncated to 8 bit)
 */
-static int fineoffset_WH0530_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_WH0530_callback(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses)
 {
     data_t *data;
     bitrow_t *bb = bitbuffer->bb;
@@ -909,9 +909,9 @@ static int fineoffset_WH0530_callback(r_device *decoder, bitbuffer_t *bitbuffer)
 
     // try Alecto WS-1200 (v1, v2, DCF)
     if (bitbuffer->bits_per_row[0] == 63)
-        return alecto_ws1200v1_callback(decoder, bitbuffer);
+        return alecto_ws1200v1_callback(decoder, bitbuffer, pulses);
     if (bitbuffer->bits_per_row[0] == 95)
-        return alecto_ws1200v2_callback(decoder, bitbuffer);
+        return alecto_ws1200v2_callback(decoder, bitbuffer, pulses);
 
     // Validate package
     if (bitbuffer->bits_per_row[0] != 71) // Match exact length to avoid false positives

@@ -177,7 +177,7 @@ Some payloads:
 
 #include "decoder.h"
 
-static int ambientweather_whx_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ambientweather_whx_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int events = 0;
     uint8_t b[18]; // actually only 6/9/17.5 bytes, no indication what the last 5 might be

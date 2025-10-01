@@ -46,7 +46,7 @@ Protocol cribbed from:
 
 #include "decoder.h"
 
-static int visonic_powercode_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int visonic_powercode_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t msg[32];
     uint8_t lrc;

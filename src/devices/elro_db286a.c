@@ -24,7 +24,7 @@ Example code: 37f62a6c80
 
 #include "decoder.h"
 
-static int elro_db286a_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int elro_db286a_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // 33 bits expected, 5 minimum packet repetitions (14 expected)
     int row = bitbuffer_find_repeated_row(bitbuffer, 5, 33);

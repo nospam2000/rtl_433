@@ -85,7 +85,7 @@ Transmit Time Offset  | 2      | 84
 Meter ID Checksum     | 2      | 86
 Packet Checksum       | 2      | 88
 */
-static int ert_idm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ert_idm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[IDM_PACKET_BYTES];
     data_t *data;
@@ -325,7 +325,7 @@ Transmit Time Offset  | 2      | 84
 Meter ID Checksum     | 2      | 86    CRC-16-CCITT of Meter ID.
 Packet Checksum       | 2      | 88    CRC-16-CCITT of packet starting at Packet Type.
 */
-static int ert_netidm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ert_netidm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[IDM_PACKET_BYTES];
     data_t *data;

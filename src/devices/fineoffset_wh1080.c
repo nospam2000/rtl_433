@@ -312,7 +312,7 @@ static int fineoffset_wh1080_callback(r_device *decoder, bitbuffer_t *bitbuffer,
 Fine Offset WH1080/WH3080 Weather Station.
 @sa fineoffset_wh1080_callback()
 */
-static int fineoffset_wh1080_callback_ook(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_wh1080_callback_ook(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     return fineoffset_wh1080_callback(decoder, bitbuffer, TYPE_OOK);
 }
@@ -321,7 +321,7 @@ static int fineoffset_wh1080_callback_ook(r_device *decoder, bitbuffer_t *bitbuf
 Fine Offset WH1080/WH3080 Weather Station.
 @sa fineoffset_wh1080_callback()
 */
-static int fineoffset_wh1080_callback_fsk(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_wh1080_callback_fsk(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     return fineoffset_wh1080_callback(decoder, bitbuffer, TYPE_FSK);
 }

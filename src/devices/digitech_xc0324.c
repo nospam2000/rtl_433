@@ -134,7 +134,7 @@ static int decode_xc0324_message(r_device *decoder, bitbuffer_t *bitbuffer,
 Digitech XC-0324 device.
 @sa decode_xc0324_message()
 */
-static int digitech_xc0324_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int digitech_xc0324_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x5F};
 

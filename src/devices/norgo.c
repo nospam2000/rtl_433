@@ -113,7 +113,7 @@ static uint8_t calc_checksum(uint8_t *data, uint8_t datalen)
     return chks >> 8;
 }
 
-static int norgo_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int norgo_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b = bitbuffer->bb[0];

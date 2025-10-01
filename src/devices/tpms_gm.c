@@ -49,7 +49,7 @@ minutes switch to sending in operatioinal mode every two minutes.
 
 */
 
-static int tpms_gm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_gm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 1) {
         return DECODE_ABORT_EARLY;

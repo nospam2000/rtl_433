@@ -99,7 +99,7 @@ Addition of TX141W and TX145wsdth:
 #define LACROSSE_TX141BV3 33
 #define LACROSSE_TX141W 65
 
-static int lacrosse_tx141x_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_tx141x_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int r;

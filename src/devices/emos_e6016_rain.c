@@ -49,7 +49,7 @@ Decoded example:
 
 */
 
-static int emos_e6016_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int emos_e6016_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 72);
 

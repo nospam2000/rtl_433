@@ -1805,8 +1805,8 @@ int main(int argc, char **argv) {
                 }
                 if (cfg->verbosity >= LOG_NOTICE)
                     print_logf(LOG_NOTICE, "Input", "Verifying test data with device %s.", r_dev->name);
+                pulse_data_t pulse_data = {0};
                 if (rfraw_check(e)) {
-                    pulse_data_t pulse_data = {0};
                     rfraw_parse(&pulse_data, e);
                     list_t single_dev = {0};
                     list_push(&single_dev, r_dev);
@@ -1816,12 +1816,12 @@ int main(int argc, char **argv) {
                         r += run_fsk_demods(&single_dev, &pulse_data);
                     list_free_elems(&single_dev, NULL);
                 } else
-                r += pulse_slicer_string(e, r_dev);
+                    r += pulse_slicer_string(e, r_dev, &pulse_data);
                 continue;
             }
             // otherwise test all decoders
+            pulse_data_t pulse_data = {0};
             if (rfraw_check(line)) {
-                pulse_data_t pulse_data = {0};
                 rfraw_parse(&pulse_data, line);
                 if (!pulse_data.fsk_f2_est)
                     r += run_ook_demods(&demod->r_devs, &pulse_data);
@@ -1832,7 +1832,7 @@ int main(int argc, char **argv) {
                 r_device *r_dev = *iter;
                 if (cfg->verbosity >= LOG_NOTICE)
                     print_logf(LOG_NOTICE, "Input", "Verifying test data with device %s.", r_dev->name);
-                r += pulse_slicer_string(line, r_dev);
+                r += pulse_slicer_string(line, r_dev, &pulse_data);
             }
         }
 
@@ -1846,8 +1846,8 @@ int main(int argc, char **argv) {
     // Special case for string test data
     if (cfg->test_data) {
         r = 0;
+        pulse_data_t pulse_data = {0};
         if (rfraw_check(cfg->test_data)) {
-            pulse_data_t pulse_data = {0};
             rfraw_parse(&pulse_data, cfg->test_data);
             if (!pulse_data.fsk_f2_est)
                 r += run_ook_demods(&demod->r_devs, &pulse_data);
@@ -1858,7 +1858,7 @@ int main(int argc, char **argv) {
             r_device *r_dev = *iter;
             if (cfg->verbosity >= LOG_NOTICE)
                 print_logf(LOG_NOTICE, "Input", "Verifying test data with device %s.", r_dev->name);
-            r += pulse_slicer_string(cfg->test_data, r_dev);
+            r += pulse_slicer_string(cfg->test_data, r_dev, &pulse_data);
         }
         r_free_cfg(cfg);
         exit(!r);

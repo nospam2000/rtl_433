@@ -35,7 +35,7 @@ static unsigned bcd2int(uint8_t bcd)
     return 10 * (bcd >> 4) + (bcd & 0xF);
 }
 
-static int abmt_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int abmt_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row;
     float temp_c;

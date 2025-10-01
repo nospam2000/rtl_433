@@ -47,7 +47,7 @@ Data layout after sync word:
 - LLL:{12} Low Temperature set, Celsius, offset 500, scale 10
 - CC :{8}  CRC 8, poly 0x31, init 0x00, final XOR 0x00, from all previous 22 bytes.
 */
-static int maverick_xr50_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int maverick_xr50_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = { 0xd2, 0xaa, 0x2d, 0xd4 };
 

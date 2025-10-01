@@ -86,7 +86,7 @@ static uint8_t chk_rollbyte(uint8_t const message[], unsigned bytes, uint16_t ge
     return sum;
 }
 
-static int gt_wt_03_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int gt_wt_03_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int row = 0;

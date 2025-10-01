@@ -42,7 +42,7 @@ RMS18, Radio Shack 61-2675-T
 
 #include "decoder.h"
 
-static int x10_rf_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int x10_rf_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b = bitbuffer->bb[1];
 

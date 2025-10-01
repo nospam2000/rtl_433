@@ -24,7 +24,7 @@ beginning with a 0 will have data in this gap.
 
 #define OSV1_BITS   32
 
-static int oregon_scientific_v1_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oregon_scientific_v1_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int ret = 0;
     int nibble[OSV1_BITS/4];

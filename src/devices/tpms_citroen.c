@@ -93,7 +93,7 @@ static int tpms_citroen_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsign
 }
 
 /** @sa tpms_citroen_decode() */
-static int tpms_citroen_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_citroen_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is 55 55 55 56 (inverted: aa aa aa a9)
     uint8_t const preamble_pattern[2] = {0xaa, 0xa9}; // 16 bits

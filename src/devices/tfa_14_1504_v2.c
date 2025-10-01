@@ -48,7 +48,7 @@ Example payloads (excluding preamble):
 #define NUM_BITS_TOTAL    (NUM_BITS_PREAMBLE + NUM_BITS_DATA)
 #define NUM_BITS_MAX      (NUM_BITS_TOTAL + 12)
 
-static int tfa_14_1504_v2_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tfa_14_1504_v2_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xaa, 0xaa, 0x5c};
 

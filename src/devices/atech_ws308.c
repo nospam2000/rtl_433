@@ -79,7 +79,7 @@ static unsigned pwm_decode(uint8_t *bits, unsigned bit_len, uint8_t *out, unsign
     return pos;
 }
 
-static int atech_ws308_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int atech_ws308_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 2)
         return DECODE_ABORT_EARLY;

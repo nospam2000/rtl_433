@@ -97,7 +97,7 @@ static int tpms_elantra2012_decode(r_device *decoder, bitbuffer_t *bitbuffer, un
 }
 
 /** @sa tpms_elantra2012_decode() */
-static int tpms_elantra2012_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_elantra2012_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Note that there is a (de)sync preamble of long/short, short/short, triple/triple,
     // i.e. 104 44, 52 48, 144 148 us pulse/gap.

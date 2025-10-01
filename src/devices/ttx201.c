@@ -205,7 +205,7 @@ static int ttx201_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigned row
 Emos TTX201 Thermo Remote Sensor.
 @sa ttx201_decode()
 */
-static int ttx201_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ttx201_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row;
     int ret    = 0;

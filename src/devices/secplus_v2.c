@@ -241,7 +241,7 @@ unsigned _preamble_len           = 28;
 Security+ 2.0 rolling code.
 @sa secplus_v2_decode_v2_half()
 */
-static int secplus_v2_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int secplus_v2_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     unsigned search_index = 0;
     bitbuffer_t bits = {0};

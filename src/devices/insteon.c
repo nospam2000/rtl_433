@@ -375,7 +375,7 @@ static int parse_insteon_pkt(r_device *decoder, bitbuffer_t *bits, unsigned int 
 Insteon RF decoder.
 @sa parse_insteon_pkt()
 */
-static int insteon_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int insteon_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // unsigned int pkt_start_pos;
     uint16_t row;

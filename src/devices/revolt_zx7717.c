@@ -135,7 +135,7 @@ coldstart energy:
     018 : (8bit)    98      checksum
 
 */
-static int revolt_zx7717_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int revolt_zx7717_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x2a}; // sync is 0x2a
 

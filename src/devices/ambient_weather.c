@@ -115,7 +115,7 @@ static int ambient_weather_decode(r_device *decoder, bitbuffer_t *bitbuffer, uns
 Ambient Weather F007TH Thermo-Hygrometer.
 @sa ambient_weather_decode()
 */
-static int ambient_weather_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ambient_weather_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // three repeats without gap
     // full preamble is 0x00145 (the last bits might not be fixed, e.g. 0x00146)

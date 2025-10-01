@@ -77,7 +77,7 @@ static int tpms_jansite_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsign
 }
 
 /** @sa tpms_jansite_decode() */
-static int tpms_jansite_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_jansite_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is
     // 0101 0101  0101 0101  0101 0101  0101 0110 = 55 55 55 56

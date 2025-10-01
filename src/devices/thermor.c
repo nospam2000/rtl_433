@@ -64,7 +64,7 @@ All bytes are reflected/reverse8
 
 */
 
-static int thermor_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermor_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 13) {
         return DECODE_ABORT_EARLY;

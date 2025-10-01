@@ -59,7 +59,7 @@ The command is fixed to 0xf, which we use as indication that an actual command i
 
 #include "decoder.h"
 
-static int somfy_rts_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int somfy_rts_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     char const *const control_strs[] = {
             "? (0)",

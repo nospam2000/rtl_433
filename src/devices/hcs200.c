@@ -33,7 +33,7 @@ rtl_433 -R 0 -X 'n=hcs200,m=OOK_PWM,s=370,l=772,r=9000,g=1500,t=152'
 
 #include "decoder.h"
 
-static int hcs200_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int hcs200_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Reject codes of wrong length
     if (bitbuffer->bits_per_row[0] != 12 || bitbuffer->bits_per_row[1] != 66)

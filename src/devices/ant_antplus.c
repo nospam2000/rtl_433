@@ -77,7 +77,7 @@ https://reveng.sourceforge.io/ to reverse engineer the CRC algorithm used
 
 #include "decoder.h"
 
-static int ant_antplus_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ant_antplus_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xAA};
     uint8_t b[17]; // aligned packet data for both preambles/offsets

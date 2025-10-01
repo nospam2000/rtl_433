@@ -55,7 +55,7 @@ every 60 seconds 3 packets.
 
 #include "decoder.h"
 
-static int wt450_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int wt450_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b = bitbuffer->bb[0];
     uint8_t humidity;

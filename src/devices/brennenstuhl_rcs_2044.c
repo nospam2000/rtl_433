@@ -104,7 +104,7 @@ static int brennenstuhl_rcs_2044_process_row(r_device *decoder, bitbuffer_t *bit
 }
 
 /** @sa brennenstuhl_rcs_2044_process_row() */
-static int brennenstuhl_rcs_2044_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int brennenstuhl_rcs_2044_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int counter = 0;
     for (int row = 0; row < bitbuffer->num_rows; row++) {

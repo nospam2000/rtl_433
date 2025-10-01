@@ -155,7 +155,8 @@ int pulse_slicer_osv1(pulse_data_t const *pulses, r_device *device);
 ///
 /// @param code The pulse sequence to demodulate in text format
 /// @param device Device params are disregarded.
+/// @param pulses Is forwarded to decoder function.
 /// @return number of events processed
-int pulse_slicer_string(const char *code, r_device *device);
+int pulse_slicer_string(const char *code, r_device *device, pulse_data_t *pulses);
 
 #endif /* INCLUDE_PULSE_SLICER_H_ */

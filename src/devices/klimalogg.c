@@ -43,7 +43,7 @@ play with the -l option (5000-15000 range) or a high sample rate.
 
 */
 
-static int klimalogg_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int klimalogg_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xB4, 0x2B}; // 0x2d, 0xd4 bit reflected
 

@@ -47,7 +47,7 @@ static int lightwave_rf_nibble_from_byte(uint8_t in)
     return nibble;
 }
 
-static int lightwave_rf_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lightwave_rf_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     bitrow_t *bb = bitbuffer->bb;

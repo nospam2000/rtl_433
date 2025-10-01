@@ -95,7 +95,7 @@ circuit
 
 #define INTERLOGIX_MSG_BIT_LEN 46
 
-static int interlogix_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int interlogix_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble message
     // only searching for 0000 0001 (bottom 8 bits of the 13 bits preamble)

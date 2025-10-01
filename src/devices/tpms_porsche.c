@@ -84,7 +84,7 @@ static int tpms_porsche_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsign
 }
 
 /** @sa tpms_porsche_decode() */
-static int tpms_porsche_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_porsche_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Full preamble is {30}ccccccca (33333332).
     uint8_t const preamble_pattern[] = {0x33, 0x33, 0x20}; // 20 bit

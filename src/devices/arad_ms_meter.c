@@ -40,7 +40,7 @@ Format string:
 
 */
 
-static int arad_mm_dialog3g_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int arad_mm_dialog3g_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x96, 0xf5, 0x13, 0x85, 0x37, 0xb4}; // 48 bit preamble
 

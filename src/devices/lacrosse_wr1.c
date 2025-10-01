@@ -50,7 +50,7 @@ LTV-WR1
 
 #include "decoder.h"
 
-static int lacrosse_wr1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_wr1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xd2, 0xaa, 0x2d, 0xd4};
 

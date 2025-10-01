@@ -34,7 +34,7 @@ The sensor sends 3 repetitions at intervals of about 60 seconds.
 
 #include "decoder.h"
 
-static int tfa_303221_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tfa_303221_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row, sendmode, channel, battery_low, temp_raw, humidity;
     float temp_c;

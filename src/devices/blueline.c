@@ -236,7 +236,7 @@ static uint16_t guess_blueline_id(r_device *decoder, const uint8_t *current_row)
     return ((best_hits >= BLUELINE_ID_GUESS_THRESHOLD) && (num_at_best_hits == 1)) ? best_id : 0;
 }
 
-static int blueline_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int blueline_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     struct blueline_stateful_context *const context = decoder_user_data(decoder);
     data_t *data;
@@ -366,12 +366,12 @@ static int blueline_decode(r_device *decoder, bitbuffer_t *bitbuffer)
             payloads_decoded++;
         } else { // Assume BLUELINE_ENERGY_MSG
             // (The lowest two bits of the pulse count will always be the same because message_type is overlaid there)
-            const uint16_t pulses = offset_payload_u16;
+            const uint16_t pulseCount = offset_payload_u16;
             /* clang-format off */
             data = data_make(
                     "model",            "",             DATA_STRING, "Blueline-PowerCost",
                     "id",               "",             DATA_INT, context->current_sensor_id,
-                    "impulses",         "",             DATA_INT,    pulses,
+                    "impulses",         "",             DATA_INT,    pulseCount,
                     "mic",              "Integrity",    DATA_STRING, "CRC",
                     NULL);
             /* clang-format on */

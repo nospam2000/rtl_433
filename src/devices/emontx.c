@@ -42,7 +42,7 @@ static unsigned char const preamble[3] = { 0xaa, 0xaa, 0xaa };
 static unsigned char const pkt_hdr_inverted[3] = { 0xd2, 0x2d, 0xc0 };
 static unsigned char const pkt_hdr[3] = { 0x2d, 0xd2, 0x00 };
 
-static int emontx_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int emontx_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     unsigned bitpos = 0;
     int events = 0;

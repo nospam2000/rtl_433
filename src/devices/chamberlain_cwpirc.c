@@ -35,7 +35,7 @@ Data layout :
 - Could be a rolling code and the learn feature could help to get the key ?
 - In case of low battery the base emits a short beep, every 35 minutes. So the low battery information is coded into the 2 messages.
 */
-static int chamberlain_cwpirc_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int chamberlain_cwpirc_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x55, 0x2D, 0xD4};
 

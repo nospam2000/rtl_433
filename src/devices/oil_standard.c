@@ -99,7 +99,7 @@ static int oil_standard_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsign
 Oil tank monitor using manchester encoded FSK/ASK protocol.
 @sa oil_standard_decode()
 */
-static int oil_standard_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oil_standard_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern0[2] = {0x55, 0x5D};
     uint8_t const preamble_pattern1[2] = {0x55, 0x62};

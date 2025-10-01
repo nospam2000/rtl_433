@@ -43,7 +43,7 @@ Layout appears to be:
 
 #include "decoder.h"
 
-static int maverick_et73_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int maverick_et73_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
   int temp1_raw, temp2_raw, row;
     float temp1_c, temp2_c;

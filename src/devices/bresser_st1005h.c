@@ -87,7 +87,7 @@ Examples which are misdetected by Oregon:
     0 01101010 0 1 00 000010101011 1000110 111101   70%  17.1°
     0 11000010 0 0 00 000001010010 1101110 101110   HH%   8.2°
 */
-static int bresser_st1005h_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bresser_st1005h_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 38);
     if (r < 0 || bitbuffer->bits_per_row[r] > 38) {

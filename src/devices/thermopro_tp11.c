@@ -23,7 +23,7 @@ normal sequence of bit rows:
 
 */
 
-static int thermopro_tp11_sensor_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tp11_sensor_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Compare first four bytes of rows that have 32 or 33 bits.
     int row = bitbuffer_find_repeated_row(bitbuffer, 2, 32);

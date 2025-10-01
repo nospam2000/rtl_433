@@ -96,7 +96,7 @@ static int tpms_pmv107j_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsign
 }
 
 /** @sa tpms_pmv107j_decode() */
-static int tpms_pmv107j_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_pmv107j_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is (7 bits) 11111 10
     uint8_t const preamble_pattern[1] = {0xf8}; // 6 bits

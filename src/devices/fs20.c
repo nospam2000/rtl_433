@@ -79,7 +79,7 @@ static struct parity_byte get_byte(uint8_t *bits, unsigned pos)
     return res;
 }
 
-static int fs20_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fs20_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static char const *const cmd_tab[] = {
             "off",

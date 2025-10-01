@@ -80,7 +80,7 @@ Interesting to note that 414b, 565a, and 53 are "AK", "VZ", and "S" which might 
 The checksum is: add all bytes after the sync word (mod 0xff).
 */
 
-static int ecodhome_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ecodhome_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0x2d, 0xd4};
 

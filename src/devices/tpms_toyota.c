@@ -80,7 +80,7 @@ static int tpms_toyota_decode(r_device *decoder, bitbuffer_t *bitbuffer, unsigne
 }
 
 /** @sa tpms_toyota_decode() */
-static int tpms_toyota_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_toyota_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is 0101 0101 0011 11 = 55 3c
     // could be shorter   11 0101 0011 11

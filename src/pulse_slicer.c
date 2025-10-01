@@ -23,12 +23,12 @@
 #include <math.h>
 #include <limits.h>
 
-static int account_event(r_device *device, bitbuffer_t *bits, char const *demod_name)
+static int account_event(r_device *device, bitbuffer_t *bits, char const *demod_name, const pulse_data_t *pulses)
 {
     // run decoder
     int ret = 0;
     if (device->decode_fn) {
-        ret = device->decode_fn(device, bits);
+        ret = device->decode_fn(device, bits, pulses);
     }
 
     // statistics accounting
@@ -249,7 +249,7 @@ int pulse_slicer_pcm(pulse_data_t const *pulses, r_device *device)
                     || (pulses->gap[n] > s_reset))      // Long silence (OOK)
                 && (bits.bits_per_row[0] > 0 || bits.num_rows > 1)) { // Only if data has been accumulated
 
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
             bitbuffer_clear(&bits);
         }
     } // for
@@ -328,7 +328,7 @@ int pulse_slicer_ppm(pulse_data_t const *pulses, r_device *device)
                     || (pulses->gap[n] >= s_reset))     // Long silence (OOK)
                 && (bits.bits_per_row[0] > 0 || bits.num_rows > 1)) { // Only if data has been accumulated
 
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
             bitbuffer_clear(&bits);
         }
     } // for pulses
@@ -436,7 +436,7 @@ int pulse_slicer_pwm(pulse_data_t const *pulses, r_device *device)
         if (((n == pulses->num_pulses - 1)                       // No more pulses? (FSK)
                     || (pulses->gap[n] > s_reset)) // Long silence (OOK)
                 && (bits.num_rows > 0)) {                        // Only if data has been accumulated
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
             bitbuffer_clear(&bits);
         }
         else if (s_gap > 0 && pulses->gap[n] > s_gap
@@ -508,7 +508,7 @@ int pulse_slicer_manchester_zerobit(pulse_data_t const *pulses, r_device *device
         if (((n == pulses->num_pulses - 1)                       // No more pulses? (FSK)
                     || (pulses->gap[n] > s_reset)) // Long silence (OOK)
                 && (bits.num_rows > 0)) {                        // Only if data has been accumulated
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
             bitbuffer_clear(&bits);
             bitbuffer_add_bit(&bits, 0); // Prepare for new message with hardcoded 0
             time_since_last = 0;
@@ -588,7 +588,7 @@ int pulse_slicer_dmc(pulse_data_t const *pulses, r_device *device)
         else if (symbol >= s_reset - s_tolerance
                 && bits.num_rows > 0) { // Only if data has been accumulated
             //END message ?
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
         }
     }
 
@@ -650,7 +650,7 @@ int pulse_slicer_piwm_raw(pulse_data_t const *pulses, r_device *device)
                     || (symbol > s_reset)) // Long silence (OOK)
                 && (bits.num_rows > 0)) {                   // Only if data has been accumulated
             //END message ?
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
         }
     }
 
@@ -706,7 +706,7 @@ int pulse_slicer_piwm_dc(pulse_data_t const *pulses, r_device *device)
                     || (symbol > s_reset)) // Long silence (OOK)
                 && (bits.num_rows > 0)) {                   // Only if data has been accumulated
             //END message ?
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
         }
     }
 
@@ -752,7 +752,7 @@ int pulse_slicer_nrzs(pulse_data_t const *pulses, r_device *device)
         if (n == pulses->num_pulses - 1
                     || pulses->gap[n] >= s_reset) {
 
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
         }
     }
 
@@ -849,7 +849,7 @@ int pulse_slicer_osv1(pulse_data_t const *pulses, r_device *device)
                     || pulses->gap[n] > s_reset)
                 && (bits.num_rows > 0)) { // Only if data has been accumulated
             //END message ?
-            events += account_event(device, &bits, __func__);
+            events += account_event(device, &bits, __func__, pulses);
             return events;
         }
         manbit ^= 1;
@@ -864,14 +864,14 @@ int pulse_slicer_osv1(pulse_data_t const *pulses, r_device *device)
     return events;
 }
 
-int pulse_slicer_string(const char *code, r_device *device)
+int pulse_slicer_string(const char *code, r_device *device, pulse_data_t *pulses)
 {
     int events = 0;
     bitbuffer_t bits = {0};
 
     bitbuffer_parse(&bits, code);
 
-    events += account_event(device, &bits, __func__);
+    events += account_event(device, &bits, __func__, pulses);
 
     return events;
 }

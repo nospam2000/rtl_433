@@ -48,7 +48,7 @@ Encoding legend:
 
 #include "decoder.h"
 
-static int calibeur_rf104_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int calibeur_rf104_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t id;
     float temperature;

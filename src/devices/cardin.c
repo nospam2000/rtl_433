@@ -26,7 +26,7 @@ May be useful for other Cardin product too
 - "01R"  = off-on   Right button used
 - "00L?" = off-off  Left button used or right button does the same as the left
 */
-static int cardin_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int cardin_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->bits_per_row[0] != 24) {
         return DECODE_ABORT_LENGTH;

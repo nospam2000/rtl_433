@@ -37,7 +37,7 @@ Sometimes the receiver samplerate has to be at 250ksps to decode properly.
 
 #include "decoder.h"
 
-static int cavius_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int cavius_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x43, 0x61, 0x76, 0x69};
 

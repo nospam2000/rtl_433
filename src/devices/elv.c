@@ -29,7 +29,7 @@ ELV EM 1000 decoder.
 
 based on fs20.c
 */
-static int em1000_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int em1000_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitrow_t *bb = bitbuffer->bb;
     uint8_t dec[10];
@@ -168,7 +168,7 @@ The type consists of 3 bits encoded as follows.
 - T1x .. T3x : 3 * 4-bit temperature C (BCD)
 - F1x .. F2x : 2 * 4-bit humidity % (BCD)
  */
-static int ws2000_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ws2000_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitrow_t *bb = bitbuffer->bb;
     uint8_t dec[16]= {0};

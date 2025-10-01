@@ -42,7 +42,7 @@ The sensor will send continuously every 2-15 secs. until the battery is reset.
 
 The sensors can be bought at Clas Ohlsen (Nexus) and Pearl (infactory/FreeTec).
 */
-static int nexus_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int nexus_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 36);
     if (r < 0) {
@@ -129,7 +129,7 @@ The "Sauna sensor", sends 36 bits 6 times, the nibbles are:
 
 Sauna sensor kit is sold by IKH (CRX) and Motonet (Prego).
 */
-static int nexus_sauna_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int nexus_sauna_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 36);
     if (r < 0) {

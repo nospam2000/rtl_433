@@ -48,7 +48,7 @@ Packet gap is 10 ms.
 
 #include "decoder.h"
 
-static int proove_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int proove_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
 

@@ -148,7 +148,7 @@ battery change for each value
     {32} 1a e4 0c 64    -24
 */
 
-static int rubicson_48659_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int rubicson_48659_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Compare first four bytes of rows that have 32 or 33 bits.
     // more then 25 repeats are not uncommon

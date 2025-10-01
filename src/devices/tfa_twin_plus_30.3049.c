@@ -49,7 +49,7 @@ It seems that the 1,2,3,4,7,8 bits changes randomly on every reset/battery chang
 
 #include "decoder.h"
 
-static int tfa_twin_plus_303049_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tfa_twin_plus_303049_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int row;

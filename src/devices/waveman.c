@@ -25,7 +25,7 @@ long-long (0 0 by the demod) not used (1 per protocol).
 
 #include "decoder.h"
 
-static int waveman_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int waveman_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b    = bitbuffer->bb[0];

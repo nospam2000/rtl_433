@@ -63,7 +63,7 @@ Status 1 will be reset to 0 when:
 
 */
 
-static int fineoffset_ws90_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_ws90_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xaa, 0xaa, 0x2d, 0xd4}; // 32 bit, part of preamble and sync word
     uint8_t b[32];

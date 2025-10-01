@@ -123,7 +123,7 @@ static int ge_coloreffects_decode(r_device *decoder, bitbuffer_t *bitbuffer, uns
 GE Color Effects Remote.
 @sa ge_coloreffects_decode()
 */
-static int ge_coloreffects_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ge_coloreffects_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Frame preamble:
     // 11001100 11001100 11001100 11001100 11001100 11111111 00000000

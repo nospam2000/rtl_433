@@ -70,7 +70,7 @@ Frame structure:
 
 #include "decoder.h"
 
-static int gt_tmbbq05_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int gt_tmbbq05_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[4], p[4];
     data_t *data;

@@ -39,7 +39,7 @@ With fresh batteries and button pressed:
 
 #include "decoder.h"
 
-static int rftech_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int rftech_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 24);
 

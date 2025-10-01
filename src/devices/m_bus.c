@@ -930,7 +930,7 @@ static int m_bus_output_data(r_device *decoder, bitbuffer_t *bitbuffer, const m_
 Wireless M-Bus, Mode C&T.
 @sa m_bus_output_data()
 */
-static int m_bus_mode_c_t_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int m_bus_mode_c_t_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static const uint8_t PREAMBLE_T[]  = {0x54, 0x3D};      // Mode T Preamble (always format A - 3of6 encoded)
 //  static const uint8_t PREAMBLE_CA[] = {0x55, 0x54, 0x3D, 0x54, 0xCD};  // Mode C, format A Preamble
@@ -1018,7 +1018,7 @@ static int m_bus_mode_c_t_callback(r_device *decoder, bitbuffer_t *bitbuffer)
 Wireless M-Bus, Mode R.
 @sa m_bus_output_data()
 */
-static int m_bus_mode_r_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int m_bus_mode_r_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static const uint8_t PREAMBLE_RA[]  = {0x55, 0x54, 0x76, 0x96};      // Mode R, format A (B not supported)
 
@@ -1056,7 +1056,7 @@ Wireless M-Bus, Mode F.
 
 Untested code, signal samples missing.
 */
-static int m_bus_mode_f_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int m_bus_mode_f_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static const uint8_t PREAMBLE_F[]  = {0x55, 0xF6};      // Mode F Preamble
 //  static const uint8_t PREAMBLE_FA[] = {0x55, 0xF6, 0x8D};  // Mode F, format A Preamble
@@ -1106,7 +1106,7 @@ static int m_bus_mode_f_callback(r_device *decoder, bitbuffer_t *bitbuffer)
 Wireless M-Bus, Mode S.
 @sa m_bus_output_data()
 */
-static int m_bus_mode_s_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int m_bus_mode_s_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static const uint8_t PREAMBLE_S[]  = {0x54, 0x76, 0x96};  // Mode S Preamble
     static const uint8_t PREAMBLE_T_DN[] = {0xaa, 0xab, 0x32};  // Mode T Downlink Preamble

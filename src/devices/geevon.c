@@ -49,7 +49,7 @@ Example packets:
 
 */
 
-static int geevon_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int geevon_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // invert all the bits
     bitbuffer_invert(bitbuffer);

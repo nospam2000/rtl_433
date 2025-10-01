@@ -34,7 +34,7 @@ Data layout:
 #define NUM_BITS_DATA (169)
 #define NUM_BITS_TOTAL (201)
 
-static int ced7000_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ced7000_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitbuffer_t decoded = { 0 };
     int ret = 0;

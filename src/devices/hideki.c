@@ -47,7 +47,7 @@ Rain:
 
 enum sensortypes { HIDEKI_UNKNOWN, HIDEKI_TEMP, HIDEKI_TS04, HIDEKI_WIND, HIDEKI_RAIN };
 
-static int hideki_ts04_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int hideki_ts04_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int ret = 0;
     for (int row = 0; row < bitbuffer->num_rows; row++) {

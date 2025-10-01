@@ -29,7 +29,7 @@ WT0124 Pool Thermometer decoder.
 
 #include "decoder.h"
 
-static int wt1024_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int wt1024_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b; // bits of a row

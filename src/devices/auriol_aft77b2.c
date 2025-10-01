@@ -86,7 +86,7 @@ static int search_row(bitbuffer_t *bitbuffer)
     return -1;
 }
 
-static int auriol_aft77_b2_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int auriol_aft77_b2_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
 

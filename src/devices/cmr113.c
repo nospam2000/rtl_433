@@ -45,7 +45,7 @@ https://github.com/jonoxer/CentAReceiver
 #define COMPARE_BITS  83
 #define COMPARE_BYTES ((COMPARE_BITS + 7) / 8)
 
-static int cmr113_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int cmr113_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int start, bit;
     uint8_t buf[4];

@@ -47,7 +47,7 @@ Notes:
 #define LACROSSE_TX_BITLEN        44
 #define LACROSSE_NYBBLE_CNT        11
 
-static int lacrossetx_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrossetx_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int events = 0;
     int result = 0;

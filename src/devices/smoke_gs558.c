@@ -47,7 +47,7 @@ Also you always need to learn from the same primary.
 
 #include "decoder.h"
 
-static int smoke_gs558_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int smoke_gs558_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b;
     int r;

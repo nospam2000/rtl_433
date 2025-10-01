@@ -73,7 +73,7 @@ static float bcd2float(uint8_t lo, uint8_t hi)
     return ((hi & 0xF0) >> 4) * 100.0f + (hi & 0x0F) * 10.0f + ((lo & 0xF0) >> 4) * 1.0f + (lo & 0x0F) * 0.1f;
 }
 
-static int thermopro_tp28b_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tp28b_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xd2, 0xaa, 0x2d, 0xd4};
 

@@ -38,7 +38,7 @@ Data layout:
 
 #include "decoder.h"
 
-static int honeywell_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int honeywell_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is 0xFFFE
     uint8_t const preamble_pattern[2] = {0xff, 0xe0}; // 12 bits

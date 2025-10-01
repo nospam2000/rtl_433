@@ -46,7 +46,7 @@ Capture raw:
 #define BUTTON_ID_S             0x07
 #define BUTTON_ID_M             0x0b
 
-static int srsmith_pool_srs_2c_tx_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int srsmith_pool_srs_2c_tx_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // part of preamble + sync word
     uint8_t const preamble[] = {0xaa, 0xd3, 0x91, 0xd3, 0x91};

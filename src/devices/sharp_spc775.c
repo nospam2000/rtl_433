@@ -33,7 +33,7 @@ rtl_433 -f 917.2M -s 250k -R 0 -X n=sharp,m=FSK_PWM,s=225,l=425,y=4000,g=2900,r=
 
 #include "decoder.h"
 
-static int sharp_spc775_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int sharp_spc775_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xa5};
 

@@ -93,7 +93,7 @@ Notes on different sensors:
 - 18b0 0887 18 : npkap
 */
 
-static int bresser_6in1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bresser_6in1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0x2d, 0xd4};
 

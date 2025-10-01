@@ -139,7 +139,7 @@ static void render_getters(data_t *data, uint8_t *bits, struct flex_params *para
 /**
 Generic flex decoder.
 */
-static int flex_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int flex_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int i;
     int match_count = 0;

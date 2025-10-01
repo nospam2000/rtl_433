@@ -104,7 +104,7 @@ Notes:
 
 #define DSC_CT_MSGLEN        5
 
-static int dsc_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int dsc_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

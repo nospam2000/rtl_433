@@ -112,7 +112,7 @@ static int gridstream_checksum(int fulllength, uint16_t length, uint8_t *bits, i
     }
 }
 
-static int gridstream_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int gridstream_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t const preambleV4[] = {

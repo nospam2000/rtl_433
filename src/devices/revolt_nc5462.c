@@ -51,7 +51,7 @@ Pulses
 
 */
 
-static int revolt_nc5462_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int revolt_nc5462_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     bitbuffer_invert(bitbuffer);
 

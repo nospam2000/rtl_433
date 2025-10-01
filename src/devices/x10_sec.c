@@ -57,7 +57,7 @@ Based on code provided by Willi 'wherzig' in issue #30 (2014-04-21)
 
 #include "decoder.h"
 
-static int x10_sec_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int x10_sec_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;                       /* bits of a row            */

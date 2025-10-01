@@ -49,7 +49,7 @@ Data format:
 
 #include "decoder.h"
 
-static int rubicson_pool_48942_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int rubicson_pool_48942_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row = bitbuffer_find_repeated_row(bitbuffer, 2, 41);
     if (row < 0 || bitbuffer->bits_per_row[row] != 41)

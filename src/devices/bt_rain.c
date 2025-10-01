@@ -30,7 +30,7 @@ thus the decoder is disabled by default.
 // Actually 37 bits for all but last transmission which is 36 bits
 #define NUM_BITS 36
 
-static int bt_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bt_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t *b;

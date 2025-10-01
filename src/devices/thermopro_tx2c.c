@@ -43,7 +43,7 @@ Data layout:
 
 */
 
-static int thermopro_tx2c_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tx2c_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Compare first four bytes of rows that have 45 or 36 bits.
     int row = bitbuffer_find_repeated_row(bitbuffer, 4, 36);

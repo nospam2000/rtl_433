@@ -87,7 +87,7 @@ $ rtl_433 -f 917M -X 'name=AOK,modulation=FSK_PCM,short=100,long=100,preamble={4
 
 #include "decoder.h"
 
-static int holman_ws5029pcm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int holman_ws5029pcm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int const wind_dir_degr[] = {0, 23, 45, 68, 90, 113, 135, 158, 180, 203, 225, 248, 270, 293, 315, 338};
     uint8_t const preamble[] = {0xAA, 0xAA, 0xAA, 0x98, 0xF3, 0xA5};
@@ -255,7 +255,7 @@ static uint8_t xor_shift_bytes(uint8_t const message[], unsigned num_bytes, uint
     return result0 ^ result1 ^ resultx;
 }
 
-static int holman_ws5029pwm_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int holman_ws5029pwm_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x55, 0x5a, 0x67}; // Preamble/Device inverted
 

@@ -37,7 +37,7 @@ data is grouped into 9 nibbles
 
 The sensor can be bought at Kjell&Co. The Infactory pool sensor can be bought at Pearl.
 */
-static int rubicson_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int rubicson_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 36);
     if (r < 0) {

@@ -75,7 +75,7 @@ These readings have not been tested.
 #define TX31U_MIN_LEN_BYTES    9  // assume at least one measurement
 #define TX31U_MAX_LEN_BYTES    20 // actually shouldn't be more than 18, but we'll be generous
 
-static int lacrosse_tx31u_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_tx31u_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
 
     // There will only be one row

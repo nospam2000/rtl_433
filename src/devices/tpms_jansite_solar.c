@@ -98,7 +98,7 @@ static int tpms_jansite_solar_decode(r_device *decoder, bitbuffer_t *bitbuffer, 
 }
 
 /** @sa tpms_jansite_solar_decode() */
-static int tpms_jansite_solar_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_jansite_solar_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[3] = {0xa6, 0xa6, 0x5a};
 

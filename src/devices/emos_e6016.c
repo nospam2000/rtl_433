@@ -55,7 +55,7 @@ Decoded example:
 
 */
 
-static int emos_e6016_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int emos_e6016_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row = bitbuffer_find_repeated_prefix(bitbuffer, 3, 120 - 8); // ignores the repeat byte
     if (row < 0) {

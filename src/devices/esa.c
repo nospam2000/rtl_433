@@ -40,7 +40,7 @@ ELV Energy Counter ESA 1000/2000.
 
 @todo Documentation needed.
 */
-static int esa_cost_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int esa_cost_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t b[MAXMSG];

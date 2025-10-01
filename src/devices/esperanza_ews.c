@@ -61,7 +61,7 @@ Sample Data:
 
 #include "decoder.h"
 
-static int esperanza_ews_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int esperanza_ews_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t b[5];
     data_t *data;

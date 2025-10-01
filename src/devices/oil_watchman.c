@@ -18,7 +18,7 @@ Tested devices:
 - Sensor Systems Watchman Sonic
 - Kingspan Watchman Sonic Plus
 */
-static int oil_watchman_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int oil_watchman_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Start of frame preamble is 111000xx
     uint8_t const preamble_pattern[] = {0xe0};

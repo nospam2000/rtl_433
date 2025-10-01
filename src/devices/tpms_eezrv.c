@@ -70,7 +70,7 @@ Decode example:
 
 */
 
-static int tpms_eezrv_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_eezrv_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble is ffff
     uint8_t const preamble_pattern[] = {0xff, 0xff};

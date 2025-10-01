@@ -137,7 +137,7 @@ static int find_next(bitbuffer_t *bitbuffer, int cur_index)
 static uint8_t cached_result[24] = {0};
 static struct timeval cached_tv  = {0};
 
-static int secplus_v1_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int secplus_v1_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t result_1[24] = {0};
     uint8_t result_2[24] = {0};

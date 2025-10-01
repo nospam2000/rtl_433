@@ -81,7 +81,7 @@ Note: Device drifts in direct sun and shows up to 12C offset.
 Note: Device is NOT waterproof (IP27), don't immerse in water.
 Note: Uses one AA battery AA or rechargeable cell, lasts for up to: 18 months.
 */
-static int homelead_hg9901_decoder(r_device *decoder, bitbuffer_t *bitbuffer)
+static int homelead_hg9901_decoder(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0x55, 0xaa};
     // Rough estimate of Lux values for light levels 0 - 8.

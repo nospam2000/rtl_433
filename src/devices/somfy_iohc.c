@@ -91,7 +91,7 @@ Example packets:
 
 */
 
-static int somfy_iohc_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int somfy_iohc_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x57, 0xfd, 0x99};
 

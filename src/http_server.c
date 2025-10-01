@@ -95,6 +95,7 @@ or `(echo "GET /stream HTTP/1.0\n"; sleep 600) | socat - tcp:127.0.0.1:8433`
 
 #include "http_server.h"
 #include "data.h"
+#include "pulse_data.h"
 #include "rtl_433.h"
 #include "r_api.h"
 #include "r_device.h" // used for protocols

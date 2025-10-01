@@ -34,7 +34,7 @@ Observed update intervals:
 
 #include "decoder.h"
 
-static int eurochron_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int eurochron_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     int row;

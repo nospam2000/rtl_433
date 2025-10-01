@@ -48,7 +48,7 @@ gets processed as data.
 #define PHILIPS_PACKETLEN    4
 #define PHILIPS_STARTNIBBLE  0x0
 
-static int philips_aj3650_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int philips_aj3650_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     /* Map channel values to their real-world counterparts */
     uint8_t const channel_map[] = {2, 0, 1, 0, 3};

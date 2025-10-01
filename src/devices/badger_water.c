@@ -11,7 +11,7 @@
 
 #include "decoder.h"
 
-/** @fn static int badger_orion_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+/** @fn static int badger_orion_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 Badger ORION water meter.
 
 S.a. https://fccid.io/GIF2006B
@@ -81,7 +81,7 @@ static int badger_decode_3of6_buffer(uint8_t const *bits, unsigned bit_offset, u
     return 0;
 }
 
-static int badger_orion_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int badger_orion_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     static uint8_t const preamble_pattern[] = {0x54, 0x3D};
 

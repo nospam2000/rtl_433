@@ -104,7 +104,7 @@ static int tpms_hyundai_vdo_decode(r_device *decoder, bitbuffer_t *bitbuffer, un
 Wrapper for the Hyundai-VDO tpms.
 @sa tpms_hyundai_vdo_decode()
 */
-static int tpms_hyundai_vdo_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int tpms_hyundai_vdo_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is 55 55 55 56 (inverted: aa aa aa a9)
     uint8_t const preamble_pattern[4] = {0xaa, 0xaa, 0xaa, 0xa9};

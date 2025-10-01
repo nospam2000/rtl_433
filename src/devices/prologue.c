@@ -32,7 +32,7 @@ The data is grouped in 9 nibbles
 
 #include "decoder.h"
 
-static int prologue_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int prologue_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t *b;
     data_t *data;

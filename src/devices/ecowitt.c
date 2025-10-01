@@ -26,7 +26,7 @@ Ecowitt Wireless Outdoor Thermometer WH53/WH0280/WH0281A.
 
 #include "decoder.h"
 
-static int ecowitt_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int ecowitt_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {
         0xf5, 0x30  // preamble and model code nominally 7+8 bit, look for 12 bit only #2933

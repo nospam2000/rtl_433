@@ -115,7 +115,7 @@ Decoded example:
 
 #define EMAX_MESSAGE_BITLEN     264   //33 * 8
 
-static int emax_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int emax_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble is ffffaaaaaaaaaacaca54
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0xca, 0xca, 0x54};

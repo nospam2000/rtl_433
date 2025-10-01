@@ -48,7 +48,7 @@ Could be merged with existing TX29 decoder... or not.
 #define LACROSSE_TX34_PAYLOAD_BITS 40
 #define LACROSSE_TX34_RAIN_FACTOR 0.222f
 
-static int lacrosse_tx34_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_tx34_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // 20 bits preamble (shifted left): 1010b 0x2DD4
     uint8_t const preamble[] = {0xa2, 0xdd, 0x40};

@@ -57,7 +57,7 @@ Data layout:
 - T: 16-bit little-endian Unknown, likely Temperature
 - C: 8 bit Checksum, CRC-8 truncated poly 0x07 init 0x00
 */
-static int new_template_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int new_template_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     /*
      * Early debugging aid to see demodulated bits in buffer and

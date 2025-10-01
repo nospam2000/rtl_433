@@ -43,7 +43,7 @@ Message Layout:
 
 #include "decoder.h"
 
-static int lacrosse_ws7000_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_ws7000_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0x01}; // 8 bits
     uint8_t const data_size[] = {3, 6, 3, 6, 10, 7}; // data nibbles by sensor type

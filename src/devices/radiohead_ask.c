@@ -135,7 +135,7 @@ static int radiohead_ask_extract(r_device *decoder, bitbuffer_t *bitbuffer, uint
     return msg_len;
 }
 
-static int radiohead_ask_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int radiohead_ask_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t row = 0; // we are considering only first row
@@ -183,7 +183,7 @@ Sensible Living Mini-Plant Moisture Sensor.
 
 @todo Documentation needed.
 */
-static int sensible_living_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int sensible_living_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     data_t *data;
     uint8_t row = 0; // we are considering only first row

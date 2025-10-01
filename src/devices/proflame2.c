@@ -87,7 +87,7 @@ static int proflame2_mc(bitbuffer_t *bitbuffer, unsigned row, unsigned start, ui
     return 0;
 }
 
-static int proflame2_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int proflame2_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     for (int row = 0; row < bitbuffer->num_rows; ++row) {
         uint8_t b[7] = {0};

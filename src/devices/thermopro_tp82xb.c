@@ -54,7 +54,7 @@ Data layout:
 - TT: Trailed bytes, not used (always d2 d2 ...... 00 00 ).
 
 */
-static int thermopro_tp828b_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tp828b_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = { // 0xd2, removed to increase success
                                         0x55, 0x2d, 0xd4};
@@ -166,7 +166,7 @@ Data layout:
 - TT:      Trailed bytes, not used (always d2 d2 ...... 00 00 ).
 
 */
-static int thermopro_tp829b_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tp829b_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = { // 0xd2, removed to increase success
                                         0x55, 0x2d, 0xd4};

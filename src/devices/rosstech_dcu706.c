@@ -34,7 +34,7 @@ Data layout:
 
 */
 
-static int rosstech_dcu706_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int rosstech_dcu706_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_data_transmission[] = {0xDD, 0x40};
     // The Bond command also contains the temperature

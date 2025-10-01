@@ -105,7 +105,7 @@ Full preamble is `aaaaaaaaaaaaaa d2aa2dd4`.
     d2aa2dd4 0fb220 8a aaaaaa 000 aaa 4e 00000000000000 [weak]
 */
 
-static int lacrosse_r1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int lacrosse_r1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // full preamble (LTV-R1) is `fff00000 aaaaaaaa d2aa2dd4`
     // full preamble (LTV-R3, LTV-W1, TFA 30.3802.02) is `aaaaaaaaaaaaaa d2aa2dd4`

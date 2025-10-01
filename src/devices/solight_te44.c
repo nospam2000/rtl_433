@@ -38,7 +38,7 @@ Data structure:
 - x: 8 bit checksum
 
 */
-static int solight_te44_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int solight_te44_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int r = bitbuffer_find_repeated_row(bitbuffer, 3, 36);
     if (r < 0) {

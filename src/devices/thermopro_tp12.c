@@ -46,7 +46,7 @@ Layout appears to be:
 
 #define BITS_IN_VALID_ROW 41
 
-static int thermopro_tp12_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int thermopro_tp12_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int temp1_raw, temp2_raw, row;
     float temp1_c, temp2_c;

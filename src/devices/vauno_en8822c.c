@@ -46,7 +46,7 @@ Sample Data:
 
 #include "decoder.h"
 
-static int vauno_en8822c_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int vauno_en8822c_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row = bitbuffer_find_repeated_prefix(bitbuffer, 4, 42);
     if (row < 0) {

@@ -33,7 +33,7 @@ CH is always 0.
 First two bytes are an LFSR-16 digest, generator 0x8810 key 0xabf9 with a final xor 0x899e
 */
 
-static int bresser_lightning_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bresser_lightning_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0x2d, 0xd4};
     uint8_t msg[10];  // not 25

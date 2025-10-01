@@ -55,7 +55,7 @@ Data Layout:
 
 #define VEVOR_MESSAGE_BITLEN     264
 
-static int vevor_7in1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int vevor_7in1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // preamble is ....aaaaaaaaaacaca54
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0xca, 0xca, 0x54};

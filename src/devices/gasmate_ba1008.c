@@ -44,7 +44,7 @@ Format string:
 
 */
 
-static int gasmate_ba1008_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int gasmate_ba1008_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 1) {
         decoder_log(decoder, 2, __func__, "Row check fail");

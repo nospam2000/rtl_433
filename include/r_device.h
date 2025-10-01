@@ -67,7 +67,7 @@ typedef struct r_device {
     float gap_limit;
     float sync_width;
     float tolerance;
-    int (*decode_fn)(struct r_device *decoder, struct bitbuffer *bitbuffer);
+    int (*decode_fn)(struct r_device *decoder, struct bitbuffer *bitbuffer, const pulse_data_t *pulses);
     struct r_device *(*create_fn)(char *args);
     unsigned priority; ///< Run later and only if no previous events were produced
     unsigned disabled; ///< 0: default enabled, 1: default disabled, 2: disabled, 3: disabled and hidden

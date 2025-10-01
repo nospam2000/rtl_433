@@ -39,7 +39,7 @@ Example:
 
 #include "decoder.h"
 
-static int megacode_callback(r_device *decoder, bitbuffer_t *bitbuffer)
+static int megacode_callback(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int row = bitbuffer_find_repeated_row(bitbuffer, 1, 144);
     if (row < 0)

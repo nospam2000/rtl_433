@@ -43,7 +43,7 @@ Packet layout:
 
 */
 
-static int fineoffset_ws80_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int fineoffset_ws80_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble[] = {0xaa, 0x2d, 0xd4}; // 24 bit, part of preamble and sync word
     uint8_t b[18];

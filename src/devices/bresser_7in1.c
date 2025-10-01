@@ -130,7 +130,7 @@ Data layout de-whitened :
 First two bytes are an LFSR-16 digest, generator 0x8810 key 0xba95 with a final xor 0x6df1, which likely means we got that wrong.
 */
 
-static int bresser_7in1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int bresser_7in1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     uint8_t const preamble_pattern[] = {0xaa, 0xaa, 0xaa, 0x2d, 0xd4};
 

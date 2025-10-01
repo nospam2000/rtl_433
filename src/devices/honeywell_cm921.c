@@ -157,7 +157,7 @@ static int parse_msg(bitbuffer_t *bmsg, int row, message_t *msg)
     return ipos;
 }
 
-static int honeywell_cm921_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int honeywell_cm921_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Sources of inspiration:
     // https://www.domoticaforum.eu/viewtopic.php?f=7&t=5806&start=240

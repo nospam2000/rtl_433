@@ -50,7 +50,7 @@ Codes example: {66}50fc467b7f9a832a8, {65}a1f88cf6ff3506550, {70}a1f88cf6ff35065
 
 */
 
-static int schou_72543_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int schou_72543_rain_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     // Full data is 3 rows, two are required for data validation
     if (bitbuffer->num_rows < 2) {

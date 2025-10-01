@@ -45,7 +45,7 @@ static int decode_8of12(uint8_t const *b, int pos, int end, bitbuffer_t *out)
     return (bitrow_get_bit(b, pos + 10) << 1) | bitrow_get_bit(b, pos + 11);
 }
 
-static int enocean_erp1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int enocean_erp1_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     if (bitbuffer->num_rows != 1)
         return DECODE_ABORT_EARLY;

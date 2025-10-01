@@ -30,7 +30,7 @@ Data is transmitted with 6 bytes row:
 
 #include "decoder.h"
 
-static int opus_xt300_decode(r_device *decoder, bitbuffer_t *bitbuffer)
+static int opus_xt300_decode(r_device *decoder, bitbuffer_t *bitbuffer, __attribute_maybe_unused__ const pulse_data_t *pulses)
 {
     int ret       = 0;
     int fail_code = 0;
