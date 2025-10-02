@@ -1,5 +1,6 @@
 /** @file
-    Decoder for EnergyCounter 3000 (ec3k), tested with .
+    Decoder for EnergyCounter 3000 (ec3k), tested with
+      - Voltcraft ENERGYCOUNT 3000 ENERGY LOGGER 
 
     Copyright (C) 2025 Michael Dreher @nospam2000
 
@@ -67,23 +68,23 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
     // const int BITTIME_BOUND_LOWER = 1;
     // const int BITTIME_BOUND_UPPER = 1;
 
-#if 1
+#if 0
     int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
     if(diffFreq > 20000 && diffFreq < 110000) {
-        printf("f1=%d f2=%d diff=%d ", (int32_t)(pulses->freq1_hz - pulses->centerfreq_hz + 0.5f), (int32_t)(pulses->freq2_hz - pulses->centerfreq_hz + 0.5f), diffFreq);
-        printf("RowLen=%-4i ", row_bits);
+        printf("#f1=%d f2=%d diff=%d ", (int32_t)(pulses->freq1_hz - pulses->centerfreq_hz + 0.5f), (int32_t)(pulses->freq2_hz - pulses->centerfreq_hz + 0.5f), diffFreq);
+        printf("#RowLen=%-4i ", row_bits);
         for (int i = 0; i < row_bits; i++) {
             printf("%i", bit_at((const uint8_t*)row, i));
         }
         printf("\n");
 
-        printf("PulseLen=%-4i ", pulses->num_pulses);
+        printf("#PulseLen=%-4i ", pulses->num_pulses);
         for (unsigned int i = 0; i < pulses->num_pulses; i++) {
             printf(" +%d -%d", pulses->pulse[i], pulses->gap[i]);
         }
         printf("\n");
 #if 0
-        printf("RowLen=%-4i ", row_bits);
+        printf("#RowLen=%-4i ", row_bits);
         for (int i = 0; i < (row_bits + 7) / 8; i++) {
             printf("%x", row[i]);
         }
@@ -95,117 +96,105 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
     char bitbuffer[max_out_bits];
     int bufferpos = 0;
     char lastlevel = 0;      // either 0 or 1
-    for (size_t col = 0; col < row_bits && bufferpos < (max_out_bits - 1) ; col++)
+    for (size_t col = 0; (col < row_bits) && (bufferpos < (max_out_bits - 1)) ; col++)
     {
         const uint8_t level = bit_at((const uint8_t*)row, col); // TODO: is the bitorder correct?
 
         // edge detection
-        if (level != lastlevel)
+        const int symbol = (level == lastlevel) ? 1 : 0; // no signal change => '1', signal change => '0'
+        bitbuffer[bufferpos++] = symbol; 
+        if (bufferpos > PAKET_MIN_BITS)
         {
-            // seems to be a bit
-            bitbuffer[bufferpos++] = 0; // change after a bit time => 0
- 
-            {
-                // out of sync
-                if (bufferpos > PAKET_MIN_BITS)
-                {
 #if 0
-                    printf("Len=%-4i ", bufferpos);
-                    for (int i = 0; i < bufferpos; i++) {
-                        printf("%i", bitbuffer[i]);
-                    }
-                    printf("\n");
+            printf("*Len=%-4i ", bufferpos);
+            for (int i = 0; i < bufferpos; i++) {
+                printf("%i", bitbuffer[i]);
+            }
+            printf("\n");
 #endif
-                    unsigned char packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
-                    int packetpos = 0;
-                    unsigned char packet = 0;
-                    char onecount = 0;
-                    unsigned char recbyte = 0;
-                    char recpos = 0;
-                    // printf("Descrambled/unstuffed: \n");
-                    for (int i = 17; i < bufferpos; i++)
+            unsigned char packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
+            int packetpos = 0;
+            unsigned char packet = 0;
+            char onecount = 0;
+            unsigned char recbyte = 0;
+            char recpos = 0;
+            // printf("Descrambled/unstuffed: \n");
+            for (int i = 17; i < bufferpos; i++)
+            {
+                char out = bitbuffer[i];
+                if (i > 17)
+                    out = out ^ bitbuffer[i - 17];
+                if (i > 12)
+                    out = out ^ bitbuffer[i - 12];
+
+                if (out)
+                {
+                    onecount++;
+                    recbyte = recbyte >> 1 | 0x80;
+                    recpos++;
+                    if ((recpos == 8) && (packet))
                     {
-                        char out = bitbuffer[i];
-                        if (i > 17)
-                            out = out ^ bitbuffer[i - 17];
-                        if (i > 12)
-                            out = out ^ bitbuffer[i - 12];
-
-                        if (out)
+                        recpos = 0;
+                        packetbuffer[packetpos++] = recbyte;
+                    }
+                    // printf("%i", out);
+                }
+                else
+                {
+                    if ((onecount < 5))
+                    {
+                        // bit unstuffing: 0 after less than 5 ones => normal bit, otherwise skip stuffed 0
+                        recbyte = recbyte >> 1;
+                        recpos++;
+                        if ((recpos == 8) && (packet))
                         {
-                            onecount++;
-                            recbyte = recbyte >> 1 | 0x80;
-                            recpos++;
-                            if ((recpos == 8) && (packet))
-                            {
-                                recpos = 0;
-                                packetbuffer[packetpos++] = recbyte;
-                            }
-                            // printf("%i", out);
+                            recpos = 0;
+                            packetbuffer[packetpos++] = recbyte;
                         }
-                        else
-                        {
-                            if ((onecount < 5))
-                            {
-                                // bit unstuffing: 0 after less than 5 ones => normal bit, otherwise skip stuffed 0
-                                recbyte = recbyte >> 1;
-                                recpos++;
-                                if ((recpos == 8) && (packet))
-                                {
-                                    recpos = 0;
-                                    packetbuffer[packetpos++] = recbyte;
-                                }
-                                // printf("%i", out);
-                            }
-
-                            // start and end of packet is marked by 6 ones
-                            if (onecount == 6)
-                            {
-                                if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
-                                {
-                                    // received ec3k packet
-
-                                    const unsigned int id = (packetbuffer[0] & 0x0f) << (8 + 4) | (packetbuffer[1]) << 4 | (packetbuffer[2]) >> 4;
-                                    const unsigned int wcurrent = (packetbuffer[15] & 0x0f) << (8 + 4) | (packetbuffer[16]) << 4 | (packetbuffer[17]) >> 4;
-                                    uint64_t energy = ((packetbuffer[33] & 0x0f) << (8 + 4) | (packetbuffer[34]) << 4 | (packetbuffer[35]) >> 4);
-                                    energy = energy << 28 | packetbuffer[12] << 20 | packetbuffer[13] << 12 | packetbuffer[14] << 4 | (packetbuffer[15] >> 4);
-
-                                    // convert to common units
-                                    const double energy_kwh = energy / (1000.0 * 3600.0); // Ws to kWh
-                                    const double power_w = wcurrent / 10.0; // 1/10 W to W
-
-                                    /* clang-format off */
-                                    data_t *data = data_make(
-                                        "model",            "",             DATA_STRING, "EnergyCounter 3000",
-                                        "id",               "",             DATA_INT,    id,
-                                        // "wcurrent",         "Power",        DATA_INT,    wcurrent,
-                                        "power",            "Power",        DATA_DOUBLE, power_w,
-                                        // "energy",           "Energy",       DATA_INT,    energy,
-                                        "energy",           "Energy",       DATA_DOUBLE, energy_kwh,
-                                        NULL);
-                                    /* clang-format on */
-
-                                    decoder_output_data(decoder, data);
-                                    rc = 1;
-                                    goto exit_decoder;
-                                }
-                                packet = !packet;
-                                recpos = 0;
-                                packetpos = 0;
-                            }
-                            onecount = 0;
-                        }
-
                         // printf("%i", out);
                     }
-                    // printf("\n");
+
+                    // start and end of packet is marked by 6 ones
+                    if (onecount == 6)
+                    {
+                        if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
+                        {
+                            // received ec3k packet
+
+                            const unsigned int id = (packetbuffer[0] & 0x0f) << (8 + 4) | (packetbuffer[1]) << 4 | (packetbuffer[2]) >> 4;
+                            const unsigned int wcurrent = (packetbuffer[15] & 0x0f) << (8 + 4) | (packetbuffer[16]) << 4 | (packetbuffer[17]) >> 4;
+                            uint64_t energy = ((packetbuffer[33] & 0x0f) << (8 + 4) | (packetbuffer[34]) << 4 | (packetbuffer[35]) >> 4);
+                            energy = energy << 28 | packetbuffer[12] << 20 | packetbuffer[13] << 12 | packetbuffer[14] << 4 | (packetbuffer[15] >> 4);
+
+                            // convert to common units
+                            const double energy_kwh = energy / (1000.0 * 3600.0); // Ws to kWh
+                            const double power_w = wcurrent / 10.0; // 1/10 W to W
+
+                            /* clang-format off */
+                            data_t *data = data_make(
+                                "model",            "",             DATA_STRING, "EnergyCounter 3000",
+                                "id",               "",             DATA_INT,    id,
+                                // "wcurrent",         "Power",        DATA_INT,    wcurrent,
+                                "power",            "Power",        DATA_DOUBLE, power_w,
+                                // "energy",           "Energy",       DATA_INT,    energy,
+                                "energy",           "Energy",       DATA_DOUBLE, energy_kwh,
+                                NULL);
+                            /* clang-format on */
+
+                            decoder_output_data(decoder, data);
+                            rc = 1;
+                            goto exit_decoder;
+                        }
+                        packet = !packet;
+                        recpos = 0;
+                        packetpos = 0;
+                    }
+                    onecount = 0;
                 }
-                bufferpos = 0;
+
+                // printf("%i", out);
             }
-        }
-        else
-        {
-            bitbuffer[bufferpos++] = 1; // no change for a bit time => 1
+            // printf("\n");
         }
 
         lastlevel = level;
@@ -251,7 +240,7 @@ static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_da
 static char const *const output_fields[] = {
         "model",
         "id",
-        "wcurrent",
+        "power",
         "energy",
         // "mic",
         NULL,
