@@ -5,6 +5,11 @@
 
     decoding info taken from https://github.com/EmbedME/ec3k_decoder
 
+    seems to work ok with this params, samplerate is very critical:
+    rtl_433 -f 868200k -s 1000000 -R 282
+
+    TODO: why does the rowlen depend on the samplerate? Should't it only depend on the bittime?
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -24,19 +29,19 @@
 //#include <time.h>
 
 // --- Configuration ---
-static const uint32_t DECODED_PAKET_LEN_BYTES = 41;
-// static const uint32_t ec3_sample_rate = 2000000; // Hz, TODO: adapt to actual sample rate
-// #define ec3_sample_rate cfg->samp_rate
+#define DECODED_PAKET_LEN_BYTES 41
+
+ // the number of bits in the decoded packet + some margin
+#define max_out_bits ((DECODED_PAKET_LEN_BYTES + 2*50) * 8)
 
 // static const uint8_t LEVEL_THRESHOLD = 47;
 // static const uint8_t LEVEL_MIN = 20;
 // static const uint8_t LEVEL_MAX = 70;
 static const uint32_t BITTIME_US = 50;
 
-#define PAKET_MIN_BITS 100
-#define PAKET_MAX_BITS ((PAKET_MIN_BITS * 1.3) * 3) // longer bit len and stuffing + repetition? TODO: review
-
-// TODO: BITBUF_COLS is 128 which is the number of bytes per column ; check which limits are in bytes and which are in bits
+// values for 200 kHz sample rate, need to be adapted to actual sample rate
+#define PAKET_MIN_BITS 90
+#define PAKET_MAX_BITS (PAKET_MIN_BITS * 5 / 2) // NRZ encoding, stuffing and noise
 
 static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uint16_t row_bits, const pulse_data_t *pulses);
 static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses);
@@ -47,40 +52,70 @@ static inline uint8_t bit_at(const uint8_t *bytes, unsigned bit)
     return (uint8_t)(bytes[bit >> 3] >> (7 - (bit & 7)) & 1);
 }
 
-static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uint16_t row_bits, const pulse_data_t *pulses) {
-    const uint32_t ec3_sample_rate = pulses->sample_rate;
-    const int BITTIME = (((uint64_t)BITTIME_US * ec3_sample_rate) / 1000000LL);
-    const int BITTIME_BOUND_LOWER = (((uint64_t)BITTIME_US * ec3_sample_rate) * 9) / (1000000LL * 10);
-    const int BITTIME_BOUND_UPPER = (((uint64_t)BITTIME_US * ec3_sample_rate) * 11) / (1000000LL * 10);
+static inline int min(int a, int b) {
+    return a < b ? a : b;
+}
 
-    char bitbuffer[1000]; // TODO: review size and replace with constant; check for overflow
+static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uint16_t row_bits, const pulse_data_t *pulses) {
+    int rc = 0;
+    // const uint32_t ec3_sample_rate = pulses->sample_rate;
+
+    // const int BITTIME = (((uint64_t)BITTIME_US * ec3_sample_rate) / 1000000LL);
+    // const int BITTIME_BOUND_LOWER = (((uint64_t)BITTIME_US * ec3_sample_rate) * 9) / (1000000LL * 10);
+    // const int BITTIME_BOUND_UPPER = (((uint64_t)BITTIME_US * ec3_sample_rate) * 11) / (1000000LL * 10);
+    // const int BITTIME = 1;
+    // const int BITTIME_BOUND_LOWER = 1;
+    // const int BITTIME_BOUND_UPPER = 1;
+
+#if 1
+    int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
+    if(diffFreq > 20000 && diffFreq < 110000) {
+        printf("f1=%d f2=%d diff=%d ", (int32_t)(pulses->freq1_hz - pulses->centerfreq_hz + 0.5f), (int32_t)(pulses->freq2_hz - pulses->centerfreq_hz + 0.5f), diffFreq);
+        printf("RowLen=%-4i ", row_bits);
+        for (int i = 0; i < row_bits; i++) {
+            printf("%i", bit_at((const uint8_t*)row, i));
+        }
+        printf("\n");
+
+        printf("PulseLen=%-4i ", pulses->num_pulses);
+        for (unsigned int i = 0; i < pulses->num_pulses; i++) {
+            printf(" +%d -%d", pulses->pulse[i], pulses->gap[i]);
+        }
+        printf("\n");
+#if 0
+        printf("RowLen=%-4i ", row_bits);
+        for (int i = 0; i < (row_bits + 7) / 8; i++) {
+            printf("%x", row[i]);
+        }
+        printf("\n");
+#endif
+    }
+#endif
+
+    char bitbuffer[max_out_bits];
     int bufferpos = 0;
     char lastlevel = 0;      // either 0 or 1
-    int lastedge = 0;
-    for (size_t col = 0; col < row_bits ; col++)
+    for (size_t col = 0; col < row_bits && bufferpos < (max_out_bits - 1) ; col++)
     {
-        const uint8_t level = bit_at((const uint8_t*)row, col);
+        const uint8_t level = bit_at((const uint8_t*)row, col); // TODO: is the bitorder correct?
 
         // edge detection
         if (level != lastlevel)
         {
-            if (lastedge >= BITTIME_BOUND_LOWER)
-            {
-                // seems to be a bit
-                bitbuffer[bufferpos++] = 0; // change after a bit time => 0
-            }
-            else
+            // seems to be a bit
+            bitbuffer[bufferpos++] = 0; // change after a bit time => 0
+ 
             {
                 // out of sync
                 if (bufferpos > PAKET_MIN_BITS)
                 {
-                    /*
-                    printf("Paket len=%i\n", bufferpos);
-                    for (i = 0; i < bufferpos; i++) {
+#if 0
+                    printf("Len=%-4i ", bufferpos);
+                    for (int i = 0; i < bufferpos; i++) {
                         printf("%i", bitbuffer[i]);
                     }
                     printf("\n");
-                    */
+#endif
                     unsigned char packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
                     int packetpos = 0;
                     unsigned char packet = 0;
@@ -151,6 +186,8 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                                     /* clang-format on */
 
                                     decoder_output_data(decoder, data);
+                                    rc = 1;
+                                    goto exit_decoder;
                                 }
                                 packet = !packet;
                                 recpos = 0;
@@ -165,29 +202,31 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                 }
                 bufferpos = 0;
             }
-
-            lastedge = 0;
         }
-
-        if (lastedge >= BITTIME_BOUND_UPPER)
+        else
         {
-            lastedge -= BITTIME;
             bitbuffer[bufferpos++] = 1; // no change for a bit time => 1
         }
 
-        lastedge++;
         lastlevel = level;
     }
-    return 1;
+
+exit_decoder:
+    return rc;
 }
 
 
 static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses)
 {
-    if (bitbuffer->num_rows != 1
-            || bitbuffer->bits_per_row[0] < PAKET_MIN_BITS
-            || bitbuffer->bits_per_row[0] > PAKET_MAX_BITS) {
-        decoder_logf(decoder, 2, __func__, "bit_per_row %u out of range", bitbuffer->bits_per_row[0]);
+    const int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
+    if (       bitbuffer->num_rows != 1
+            || bitbuffer->bits_per_row[0] < (PAKET_MIN_BITS * pulses->sample_rate / 200000) // adapt to sample rate
+            || bitbuffer->bits_per_row[0] > (PAKET_MAX_BITS * pulses->sample_rate / 200000) // adapt to sample rate
+            || diffFreq < 20000
+            || diffFreq > 110000
+        )
+    {
+        decoder_logf(decoder, 2, __func__, "bit_per_row %u out of range or frequency shift %d out of range", bitbuffer->bits_per_row[0], diffFreq);
         return DECODE_ABORT_EARLY; // Unrecognized data
     }
 
@@ -223,7 +262,7 @@ const r_device ec3k = {
     .modulation     = FSK_PULSE_PCM,
     .short_width    = BITTIME_US,
     .long_width     = BITTIME_US,
-    .tolerance      = 2 ,    // %
+    .tolerance      = BITTIME_US / 7, // in us ; there can be up to 5 consecutive 0 or 1 pulses and the sync word is 6 bits, so 1/7 should be ok
     .gap_limit      = 3000,  // some distance above long
     .reset_limit    = 5000, // a bit longer than packet gap
     //.sync_pattern   = EC3K_SYNC_PATTERN,
@@ -231,4 +270,5 @@ const r_device ec3k = {
     .disabled       = 0,
     .fields         = output_fields,
     .verbose        = 3,
+    .verbose_bits   = 3,
 };
