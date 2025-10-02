@@ -1,15 +1,43 @@
 /** @file
-    Decoder for EnergyCounter 3000 (ec3k), tested with
-      - Voltcraft ENERGYCOUNT 3000 ENERGY LOGGER 
+    Decoder for Energy Counter 3000 (ec3k), tested with
+      - Voltcraft ENERGYCOUNT 3000 ENERGY LOGGER (Item No. 12 53 53, https://conrad-rus.ru/images/stories/virtuemart/media/125353-an-01-ml-TCRAFT_ENERGYC_3000_ENER_MESSG_de_en_nl.pdf)
+        (don't mix that up with similar products from the same company like "Energy Check 3000", "Energy Monitor 3000" and "Energy Logger 4000")
 
     Copyright (C) 2025 Michael Dreher @nospam2000
 
-    decoding info taken from https://github.com/EmbedME/ec3k_decoder
+    decoding info taken from
+      https://github.com/EmbedME/ec3k_decoder (using rtl_fm)
+      https://github.com/avian2/ec3k (using python and gnuradio)
 
-    seems to work ok with this params, samplerate is very critical:
+    Some more info can be found here: https://batilanblog.wordpress.com/2015/01/11/getting-data-from-voltcraft-energy-count-3000-on-your-computer/
+
+
+    The device transmits every 6 seconds (if there is a change in power consumption) or every 30 minutes (if there is no change).
+    It uses BFSK modulation with two frequencies between 30 and 80 kHz apart (e.g. 868.297 and 868.336 MHz).
+    The bit rate is 20 kbit/s, so bit time is 50 us.
+
+    The packet is NRZI encoded, with bit stuffing (a 0 is inserted after 5 consecutive 1 bits).
+    The packet is framed by 0x7E (01111110) bytes at start and end.
+    The packet length is 41 bytes (328 bits) including the two framing bytes.
+    The packet contains a 12-bit CRC (CRC-12/3GPP, polynomial 0x80F, init 0xFFF, no reflection, xorout 0x000, not including syncword at the end).
+
+    The following fields are decoded:
+        id -- 16-bit ID of the device
+        time_total -- time in seconds since last reset
+        time_on -- time in seconds since last reset with non-zero device power
+        energy -- total energy in Ws (watt-seconds)
+        power_current -- current device power in watts
+        power_max -- maximum device power in watts (reset at unknown intervals)
+        reset_counter -- total number of transmitter resets
+        device_on_flag -- true if device is currently drawing non-zero power
+
+    seems to work with this params, samplerate 1M is very critical:
     rtl_433 -f 868200k -s 1000000 -R 282
 
-    TODO: why does the rowlen depend on the samplerate? Should't it only depend on the bittime?
+    TODO: why does the rowlen depend on the samplerate? Should't it only depend on the bittime? Is this the reason why decoding fails with other samplerates?
+    TODO: implement searching for start of packet, currently we just start at bit 0 and expect a full packet
+    TODO: check CRC
+    TODO: implement other fields
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -110,6 +138,7 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
     char recpos = 0;
     // printf("Descrambled/unstuffed: \n");
 
+    // TODO: align the implementation with this code: https://github.com/avian2/ec3k/blob/master/ec3k.py
     // TODO: iterate over the input bits to find the start of the packet, check for preamble and sync (01111110 or 10000001)
     // currently we just start at bit 0 and expect a full packet
     for (int i = 17; i < row_bits; i++)
