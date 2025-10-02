@@ -65,12 +65,12 @@ static int account_event(r_device *device, bitbuffer_t *bits, char const *demod_
 int pulse_slicer_pcm(pulse_data_t const *pulses, r_device *device)
 {
     float samples_per_us = pulses->sample_rate / 1.0e6f;
-    int s_short = device->short_width * samples_per_us;
-    int s_long  = device->long_width * samples_per_us;
-    int s_reset = device->reset_limit * samples_per_us;
-    int s_gap   = device->gap_limit * samples_per_us;
-    int s_sync  = device->sync_width * samples_per_us;
-    int s_tolerance = device->tolerance * samples_per_us;
+    int s_short = device->short_width * samples_per_us + 0.5f; // add 0.5 for rounding to distribute the error around the center
+    int s_long  = device->long_width * samples_per_us + 0.5f;
+    int s_reset = device->reset_limit * samples_per_us + 0.5f;
+    int s_gap   = device->gap_limit * samples_per_us + 0.5f;
+    int s_sync  = device->sync_width * samples_per_us + 0.5f;
+    int s_tolerance = device->tolerance * samples_per_us + 0.5f;
 
     // check for rounding to zero
     if ((device->short_width > 0 && s_short <= 0)
