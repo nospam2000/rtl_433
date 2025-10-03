@@ -212,9 +212,6 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                 if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
                 {
                     // decode received ec3k packet
-                    uint64_t energy = (((uint64_t)packetbuffer[33] & 0x0f) << (8 + 4)) | ((uint64_t)packetbuffer[34] << 4) | ((uint64_t)packetbuffer[35] >> 4);
-                    energy = (energy << 28) | (uint64_t)packetbuffer[12] << 20 |  (uint64_t)packetbuffer[13] << 12 |  (uint64_t)packetbuffer[14] << 4 |  (uint64_t)(packetbuffer[15] >> 4);
-                    
                     uint16_t id              = unpack_nibbles(packetbuffer, 1, 4);
                     uint16_t time_total_low  = unpack_nibbles(packetbuffer, 5, 4);
                     uint16_t pad_1           = unpack_nibbles(packetbuffer, 9, 4);
@@ -237,8 +234,8 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                     uint16_t calculated_crc  = calc_ec3k_crc(packetbuffer, DECODED_PAKET_LEN_BYTES - 2);
 
                     // convert to common units
+                    uint64_t energy = energy_high | energy_low;
                     const double energy_kwh = energy / (1000.0 * 3600.0); // Ws to kWh
-                    const double energy_kwh2 = (energy_high | (uint64_t)energy_low) / (1000.0 * 3600.0); // Ws to kWh
 
                     if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0 && calculated_crc == received_crc) {
                         /* clang-format off */
