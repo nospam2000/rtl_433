@@ -61,12 +61,12 @@ typedef struct r_device {
     /* information provided by each decoder */
     char const *name;
     unsigned modulation;
-    float short_width;
-    float long_width;
-    float reset_limit;
-    float gap_limit;
-    float sync_width;
-    float tolerance;
+    float short_width; ///< in us
+    float long_width; ///< in us
+    float reset_limit; ///< in us
+    float gap_limit; ///< in us
+    float sync_width; ///< in us, 0 if not used
+    float tolerance; ///< in us, used for short and long width
     int (*decode_fn)(struct r_device *decoder, struct bitbuffer *bitbuffer, const pulse_data_t *pulses);
     struct r_device *(*create_fn)(char *args);
     unsigned priority; ///< Run later and only if no previous events were produced
