@@ -212,8 +212,8 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                 if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
                 {
                     // decode received ec3k packet
-                    uint64_t energy = ((packetbuffer[33] & 0x0f) << (8 + 4) | (packetbuffer[34]) << 4 | (packetbuffer[35]) >> 4);
-                    energy = energy << 28 | packetbuffer[12] << 20 | packetbuffer[13] << 12 | packetbuffer[14] << 4 | (packetbuffer[15] >> 4);
+                    uint64_t energy = (((uint64_t)packetbuffer[33] & 0x0f) << (8 + 4)) | ((uint64_t)packetbuffer[34] << 4) | ((uint64_t)packetbuffer[35] >> 4);
+                    energy = (energy << 28) | (uint64_t)packetbuffer[12] << 20 |  (uint64_t)packetbuffer[13] << 12 |  (uint64_t)packetbuffer[14] << 4 |  (uint64_t)(packetbuffer[15] >> 4);
                     
                     uint16_t id              = unpack_nibbles(packetbuffer, 1, 4);
                     uint16_t time_total_low  = unpack_nibbles(packetbuffer, 5, 4);
@@ -228,7 +228,7 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                     // 						nibbles[45:59]
                     uint16_t time_total_high = unpack_nibbles(packetbuffer, 59, 3);
                     uint32_t pad_3           = unpack_nibbles(packetbuffer, 62, 5);
-                    uint64_t energy_high     = unpack_nibbles(packetbuffer, 67, 4) << 28;
+                    uint64_t energy_high     = (uint64_t)unpack_nibbles(packetbuffer, 67, 4) << 28;
                     uint16_t time_on_high    = unpack_nibbles(packetbuffer, 71, 3);
                     uint8_t  reset_counter   = unpack_nibbles(packetbuffer, 74, 2);
                     uint8_t  flags           = unpack_nibbles(packetbuffer, 76, 1);
@@ -238,7 +238,7 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
 
                     // convert to common units
                     const double energy_kwh = energy / (1000.0 * 3600.0); // Ws to kWh
-                    const double energy_kwh2 = (energy_high | energy_low) / (1000.0 * 3600.0); // Ws to kWh
+                    const double energy_kwh2 = (energy_high | (uint64_t)energy_low) / (1000.0 * 3600.0); // Ws to kWh
 
                     if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0 && calculated_crc == received_crc) {
                         /* clang-format off */
@@ -247,6 +247,7 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                             "id",               "",             DATA_INT,    id,
                             "power",            "Power",        DATA_DOUBLE, power_current,
                             "energy",           "Energy",       DATA_DOUBLE, energy_kwh,
+                            "mic",              "Integrity",    DATA_STRING, "CRC",
                             NULL);
                         /* clang-format on */
 
@@ -285,15 +286,13 @@ static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_da
         return DECODE_ABORT_EARLY; // Unrecognized data
     }
 
-    // TODO: support multiple rows
+    // TODO: support multiple rows?
     // for (size_t bufferRow = 0; bufferRow < bitbuffer->num_rows; bufferRow++) {
     //     const bitrow_t *row = &bitbuffer->bb[bufferRow];
     //     ec3_decode_row(r_device *decoder, row);
     // }
 
-    ec3_decode_row(decoder, bitbuffer->bb[0], bitbuffer->bits_per_row[0], pulses);
-
-    return 1;
+    return ec3_decode_row(decoder, bitbuffer->bb[0], bitbuffer->bits_per_row[0], pulses);
 }
 
 // from the ec3k python implementation at https://github.com/avian2/ec3k
@@ -326,7 +325,7 @@ static char const *const output_fields[] = {
         "id",
         "power",
         "energy",
-        // "mic",
+        "mic",
         NULL,
 };
 
@@ -342,6 +341,6 @@ const r_device ec3k = {
     .decode_fn      = &ec3k_decode,
     .disabled       = 0,
     .fields         = output_fields,
-    .verbose        = 3,
-    .verbose_bits   = 3,
+    .verbose        = 3, // TODO: shall this be removed?
+    .verbose_bits   = 3, // TODO: shall this be removed?
 };
