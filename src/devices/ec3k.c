@@ -1,14 +1,14 @@
 /** @file
-    Decoder for Voltcraft Energy Count 3000 (ec3k) / Cost Control RT-110 sold by Conrad, tested with
+    Decoder for Voltcraft Energy Count 3000 (ec3k, sold by Conrad) / Cost Control RT-110 , tested with:
+      - Technoline Cost Control RT-110 (https://www.technotrade.de/produkt/technoline-cost-control-rt-110/), EAN 4029665006208
+
+    Should also work with these devices from other manufacturers that use the same protocol or are even identical:
       - Voltcraft ENERGYCOUNT 3000 ENERGY LOGGER (Item No. 12 53 53, https://conrad-rus.ru/images/stories/virtuemart/media/125353-an-01-ml-TCRAFT_ENERGYC_3000_ENER_MESSG_de_en_nl.pdf)
         (don't mix that up with similar products from the same company like "Energy Check 3000", "Energy Monitor 3000" and "Energy Logger 4000")
-
-    Should also work with these devices from other manufacturers that use the same protocol:
-      - Technoline Cost Control RT-110
       - Velleman (type NETBESEM4)
       - La Crosse Techology Remote Cost Control Monitor” (type RS3620)
 
-    Copyright (C) 2025 Michael Dreher @nospam2000
+    Copyright (C) 2025 Michael Dreher <michael(a)5dot1.de> @nospam2000
 
     decoding info taken from these projects:
       - https://github.com/EmbedME/ec3k_decoder (using rtl_fm)
@@ -67,9 +67,6 @@
 
 // --- Configuration ---
 #define DECODED_PAKET_LEN_BYTES (41)
- // the number of bits in the decoded packet + some margin
-#define max_out_bits ((DECODED_PAKET_LEN_BYTES + 2*50) * 8)
-
 static const uint32_t BITTIME_US = 50;
 
 // values for 200 kHz sample rate, need to be adapted to actual sample rate
@@ -242,7 +239,7 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                         "id",               "",              DATA_FORMAT, "%04x", DATA_INT, id,
                         "power",            "Power",         DATA_DOUBLE, power_current,
                         "energy",           "Energy",        DATA_DOUBLE, energy_kWh,
-                        "energy2",          "Energy 2",      DATA_DOUBLE, energy_kWh,
+                        "energy2",          "Energy 2",      DATA_DOUBLE, energy2_kWh,
                         "mic",              "Integrity",     DATA_STRING, "CRC",
                         "time_total",       "Time total",    DATA_INT,    time_total,
                         "time_on",          "Time on",       DATA_INT,    time_on,
