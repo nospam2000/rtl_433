@@ -95,27 +95,24 @@ static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_da
 static uint16_t calc_ec3k_crc(uint8_t *buffer, size_t len);
 static uint16_t update_ec3k_crc(uint16_t crc, uint8_t ch);
 
-static inline uint8_t bit_at(const uint8_t *bytes, int bit)
+static inline uint8_t bit_at(const uint8_t *bytes, int32_t bit)
 {
     return (uint8_t)(bytes[bit >> 3] >> (7 - (bit & 7)) & 1);
 }
 
-static inline uint8_t symbol_at(const uint8_t *bytes, int bit)
+static inline uint8_t symbol_at(const uint8_t *bytes, int32_t bit)
 {
     // NRZI decoding
-    int bit0 = (bit > 0) ? bit_at(bytes, bit - 1) : 0;
-    int bit1 = bit_at(bytes, bit);
+    uint8_t bit0 = (bit > 0) ? bit_at(bytes, bit - 1) : 0;
+    uint8_t bit1 = bit_at(bytes, bit);
     return (bit0 == bit1) ? 1 : 0;
 }
 
-static inline int min(int a, int b) {
-    return a < b ? a : b;
-}
-
-static uint32_t unpack_nibbles(const uint8_t* buf, int start_nibble, int num_nibbles)
+// maximum 8 nibbles (32 bits)
+static uint32_t unpack_nibbles(const uint8_t* buf, int32_t start_nibble, int32_t num_nibbles)
 {
     uint32_t val = 0;
-    for (int i = 0; i < num_nibbles; i++)
+    for (int32_t i = 0; i < num_nibbles; i++)
     {
         val = (val << 4) | ((buf[(start_nibble + i) / 2] >> ((1 - ((start_nibble + i) & 1)) * 4)) & 0x0F);
     }
@@ -123,7 +120,7 @@ static uint32_t unpack_nibbles(const uint8_t* buf, int start_nibble, int num_nib
 }
 
 static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uint16_t row_bits, __attribute_maybe_unused__ const pulse_data_t *pulses) {
-    int rc = 0;
+    int rc = DECODE_ABORT_EARLY;
     // const uint32_t ec3_sample_rate = pulses->sample_rate;
 
     // const int BITTIME = (((uint64_t)BITTIME_US * ec3_sample_rate) / 1000000LL);
@@ -158,22 +155,18 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
     }
 #endif
 
-    int bufferpos = 0;
+    int32_t bufferpos = 0;
     //for (size_t col = 0; (col < row_bits) && (bufferpos < (max_out_bits - 1)) ; col++)
-    unsigned char packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
-    int packetpos = 0;
-    unsigned char packet = 0;
-    char onecount = 0;
-    unsigned char recbyte = 0;
-    char recpos = 0;
-    // printf("Descrambled/unstuffed: \n");
+    uint8_t packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
+    int32_t packetpos = 0;
+    uint8_t packet = 0;
+    uint8_t onecount = 0;
+    uint8_t recbyte = 0;
+    uint8_t recpos = 0;
 
-    // TODO: align the implementation with this code: https://github.com/avian2/ec3k/blob/master/ec3k.py
-    // TODO: iterate over the input bits to find the start of the packet, check for preamble and sync (01111110 or 10000001)
-    // currently we just start at bit 0 and expect a full packet
-    for (int i = 17; i < row_bits; i++)
+    for (int32_t i = 17; i < row_bits; i++)
     {
-        char out = symbol_at((const uint8_t*)row, bufferpos + i);
+        uint8_t out = symbol_at((const uint8_t*)row, bufferpos + i);
         if (i > 17)
             out = out ^ symbol_at((const uint8_t*)row, bufferpos + i - 17);
         if (i > 12)
@@ -189,7 +182,6 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                 recpos = 0;
                 packetbuffer[packetpos++] = recbyte;
             }
-            // printf("%i", out);
         }
         else
         {
@@ -203,11 +195,10 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                     recpos = 0;
                     packetbuffer[packetpos++] = recbyte;
                 }
-                // printf("%i", out);
             }
 
             // start and end of packet is marked by 6 ones
-            if (onecount == 6)
+            else if (onecount == 6)
             {
                 if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
                 {
@@ -230,66 +221,85 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                     uint8_t  reset_counter   = unpack_nibbles(packetbuffer, 74, 2);
                     uint8_t  flags           = unpack_nibbles(packetbuffer, 76, 1);
                     uint8_t  pad_4           = unpack_nibbles(packetbuffer, 77, 1);
-                    uint16_t received_crc    = unpack_nibbles(packetbuffer, 78, 2) | (unpack_nibbles(packetbuffer, 80, 2) << 8); // little-endian
+                    uint16_t received_crc    = 0xffff ^ (unpack_nibbles(packetbuffer, 78, 2) | (unpack_nibbles(packetbuffer, 80, 2) << 8)); // little-endian
                     uint16_t calculated_crc  = calc_ec3k_crc(packetbuffer, DECODED_PAKET_LEN_BYTES - 2);
 
                     // convert to common units
-                    uint64_t energy = energy_high | energy_low;
-                    const double energy_kwh = energy / (1000.0 * 3600.0); // Ws to kWh
+                    uint64_t energy_Ws = energy_high | energy_low;
+                    const double energy_kWh = energy_Ws / (1000.0 * 3600.0); // Ws to kWh
 
-                    if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0 && calculated_crc == received_crc) {
-                        /* clang-format off */
-                        data_t *data = data_make(
-                            "model",            "",             DATA_STRING, "Voltcraft Energy Count 3000",
-                            "id",               "",             DATA_INT,    id,
-                            "power",            "Power",        DATA_DOUBLE, power_current,
-                            "energy",           "Energy",       DATA_DOUBLE, energy_kwh,
-                            "mic",              "Integrity",    DATA_STRING, "CRC",
-                            NULL);
-                        /* clang-format on */
+                    if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0) {
+                        if(calculated_crc == received_crc) {
+                            /* clang-format off */
+                            data_t *data = data_make(
+                                "model",            "",             DATA_STRING, "Voltcraft Energy Count 3000",
+                                "id",               "",             DATA_FORMAT, "%04x", DATA_INT, id,
+                                "power",            "Power",        DATA_DOUBLE, power_current,
+                                "energy",           "Energy",       DATA_DOUBLE, energy_kWh,
+                                "fdiff",            "FreqDiff",     DATA_INT,    (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f), // TODO: remove
+                                "mic",              "Integrity",    DATA_STRING, "CRC",
+                                NULL);
+                            /* clang-format on */
 
-                        decoder_output_data(decoder, data);
-                        rc = 1;
+                            decoder_output_data(decoder, data);
+                            rc = 1;
+                            decoder->decode_ok++;
+                            break;
+                        }
+                        else {
+                            decoder_logf(decoder, 1, __func__, "Warning: CRC error, calculated %04X but received %04X", calculated_crc, received_crc);
+                            rc = DECODE_FAIL_MIC;
+                        }
+                    } else {
+                        decoder_logf(decoder, 1, __func__, "Warning: padding bits are not zero, pad_1=%u pad_2=%u pad_3=%u pad_4=%u", pad_1, pad_2, pad_3, pad_4);
+                        rc = DECODE_FAIL_SANITY;
                     }
-                    goto exit_decoder;
                 }
+
                 packet = !packet;
                 recpos = 0;
                 packetpos = 0;
             }
             onecount = 0;
         }
-
-        // printf("%i", out);
     }
-    // printf("\n");
 
-exit_decoder:
     return rc;
 }
 
 
 static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses)
 {
+    int rc = DECODE_ABORT_EARLY;
     const int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
+
     if (       bitbuffer->num_rows != 1
             || bitbuffer->bits_per_row[0] < (PAKET_MIN_BITS * pulses->sample_rate / 200000) // adapt to sample rate
             || bitbuffer->bits_per_row[0] > (PAKET_MAX_BITS * pulses->sample_rate / 200000) // adapt to sample rate
-            || diffFreq < 20000
-            || diffFreq > 110000
         )
     {
-        decoder_logf(decoder, 2, __func__, "bit_per_row %u out of range or frequency shift %d out of range", bitbuffer->bits_per_row[0], diffFreq);
-        return DECODE_ABORT_EARLY; // Unrecognized data
+        decoder_logf(decoder, 3, __func__, "bit_per_row %u out of range", bitbuffer->bits_per_row[0]);
+        rc = DECODE_ABORT_LENGTH; // Unrecognized data
+    }
+    else if (diffFreq < 20000 || diffFreq > 110000)
+    {
+        decoder_logf(decoder, 3, __func__, "frequency shift %d out of range", diffFreq);
+        rc = DECODE_ABORT_EARLY; // Unrecognized data
+    }
+    else
+    {
+        // TODO: remove
+        // temporarily set verbose level high to get bitrow output
+        // int orig_verbose = decoder->verbose;
+        // int orig_verbose_bits = decoder->verbose;
+        decoder->verbose = 3;
+        decoder->verbose_bits = 3;
+        rc = ec3_decode_row(decoder, bitbuffer->bb[0], bitbuffer->bits_per_row[0], pulses);
+        // decoder->verbose = orig_verbose;
+        // decoder->verbose = orig_verbose_bits;
     }
 
-    // TODO: support multiple rows?
-    // for (size_t bufferRow = 0; bufferRow < bitbuffer->num_rows; bufferRow++) {
-    //     const bitrow_t *row = &bitbuffer->bb[bufferRow];
-    //     ec3_decode_row(r_device *decoder, row);
-    // }
-
-    return ec3_decode_row(decoder, bitbuffer->bb[0], bitbuffer->bits_per_row[0], pulses);
+    return rc;
 }
 
 // from the ec3k python implementation at https://github.com/avian2/ec3k
@@ -299,7 +309,7 @@ static uint16_t calc_ec3k_crc(uint8_t *buffer, size_t len)
     for(size_t i = 0; i < len; i++) {
         crc = update_ec3k_crc(crc, buffer[i]);
     }
-    return crc ^ 0xffff;
+    return crc;
 }
 
 static uint16_t update_ec3k_crc(uint16_t crc, uint8_t ch)
@@ -322,6 +332,7 @@ static char const *const output_fields[] = {
         "id",
         "power",
         "energy",
+        "fdiff", // TODO: remove
         "mic",
         NULL,
 };
@@ -338,6 +349,4 @@ const r_device ec3k = {
     .decode_fn      = &ec3k_decode,
     .disabled       = 0,
     .fields         = output_fields,
-    .verbose        = 3, // TODO: shall this be removed?
-    .verbose_bits   = 3, // TODO: shall this be removed?
 };
