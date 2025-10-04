@@ -155,39 +155,48 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
     }
 #endif
 
-    int32_t bufferpos = 0;
-    //for (size_t col = 0; (col < row_bits) && (bufferpos < (max_out_bits - 1)) ; col++)
-    uint8_t packetbuffer[100]; // TODO: review size and replace with constant; check for overflow
+    uint8_t packetbuffer[DECODED_PAKET_LEN_BYTES]; // TODO: check size
     int32_t packetpos = 0;
     uint8_t packet = 0;
     uint8_t onecount = 0;
     uint8_t recbyte = 0;
     uint8_t recpos = 0;
 
-    for (int32_t i = 17; i < row_bits; i++)
+    for (int32_t bufferpos = 17; bufferpos < row_bits; bufferpos++)
     {
-        uint8_t out = symbol_at((const uint8_t*)row, bufferpos + i);
-        if (i > 17)
-            out = out ^ symbol_at((const uint8_t*)row, bufferpos + i - 17);
-        if (i > 12)
-            out = out ^ symbol_at((const uint8_t*)row, bufferpos + i - 12);
+        uint8_t out = symbol_at((const uint8_t*)row, bufferpos);
+        if (bufferpos > 17)
+            out = out ^ symbol_at((const uint8_t*)row, bufferpos - 17);
+        if (bufferpos > 12)
+            out = out ^ symbol_at((const uint8_t*)row, bufferpos - 12);
 
         if (out)
         {
-            onecount++;
-            recbyte = recbyte >> 1 | 0x80;
-            recpos++;
-            if ((recpos == 8) && (packet))
+            if((onecount < 6) && (packetpos < DECODED_PAKET_LEN_BYTES))
             {
+                onecount++;
+                recbyte = recbyte >> 1 | 0x80;
+                recpos++;
+                if ((recpos == 8) && (packet))
+                {
+                    recpos = 0;
+                    packetbuffer[packetpos++] = recbyte;
+                }
+            }
+            else
+            {
+                // reset state to re-sync
+                packet = 0;
+                packetpos = 0;
                 recpos = 0;
-                packetbuffer[packetpos++] = recbyte;
+                onecount = 0;
             }
         }
         else
         {
-            if ((onecount < 5))
+            if ((onecount < 5) && (packetpos < DECODED_PAKET_LEN_BYTES))
             {
-                // bit unstuffing: 0 after less than 5 ones => normal bit, otherwise skip stuffed 0
+                // normal 0 bit
                 recbyte = recbyte >> 1;
                 recpos++;
                 if ((recpos == 8) && (packet))
@@ -196,70 +205,141 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
                     packetbuffer[packetpos++] = recbyte;
                 }
             }
-
-            // start and end of packet is marked by 6 ones
+            else if (onecount == 5)
+            {
+                // bit unstuffing: 0 after 5 ones is a stuffed 0, skip it
+            }
+            // start and end of packet is marked by 6 ones surrounded by 0 (0x7e)
             else if (onecount == 6)
             {
-                if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
-                {
-                    // decode received ec3k packet
-                    uint16_t id              = unpack_nibbles(packetbuffer, 1, 4);
-                    uint16_t time_total_low  = unpack_nibbles(packetbuffer, 5, 4);
-                    uint16_t pad_1           = unpack_nibbles(packetbuffer, 9, 4);
-                    uint16_t time_on_low     = unpack_nibbles(packetbuffer, 13, 4);
-                    uint32_t pad_2           = unpack_nibbles(packetbuffer, 17, 7);
-                    uint32_t energy_low      = unpack_nibbles(packetbuffer, 24, 7);
-                    double   power_current   = unpack_nibbles(packetbuffer, 31, 4) / 10.0;
-                    double   power_max       = unpack_nibbles(packetbuffer, 35, 4) / 10.0;
-                    // unknown? (seems to be used for internal calculations)
-                    uint32_t energy_2        = unpack_nibbles(packetbuffer, 39, 6);
-                    // 						nibbles[45:59]
-                    uint16_t time_total_high = unpack_nibbles(packetbuffer, 59, 3);
-                    uint32_t pad_3           = unpack_nibbles(packetbuffer, 62, 5);
-                    uint64_t energy_high     = (uint64_t)unpack_nibbles(packetbuffer, 67, 4) << 28;
-                    uint16_t time_on_high    = unpack_nibbles(packetbuffer, 71, 3);
-                    uint8_t  reset_counter   = unpack_nibbles(packetbuffer, 74, 2);
-                    uint8_t  flags           = unpack_nibbles(packetbuffer, 76, 1);
-                    uint8_t  pad_4           = unpack_nibbles(packetbuffer, 77, 1);
-                    uint16_t received_crc    = 0xffff ^ (unpack_nibbles(packetbuffer, 78, 2) | (unpack_nibbles(packetbuffer, 80, 2) << 8)); // little-endian
-                    uint16_t calculated_crc  = calc_ec3k_crc(packetbuffer, DECODED_PAKET_LEN_BYTES - 2);
+                // if (packet && packetpos == DECODED_PAKET_LEN_BYTES)
+                // {
+                //     // decode received ec3k packet
+                //     uint16_t id              = unpack_nibbles(packetbuffer, 1, 4);
+                //     uint16_t time_total_low  = unpack_nibbles(packetbuffer, 5, 4);
+                //     uint16_t pad_1           = unpack_nibbles(packetbuffer, 9, 4);
+                //     uint16_t time_on_low     = unpack_nibbles(packetbuffer, 13, 4);
+                //     uint32_t pad_2           = unpack_nibbles(packetbuffer, 17, 7);
+                //     uint32_t energy_low      = unpack_nibbles(packetbuffer, 24, 7);
+                //     double   power_current   = unpack_nibbles(packetbuffer, 31, 4) / 10.0;
+                //     double   power_max       = unpack_nibbles(packetbuffer, 35, 4) / 10.0;
+                //     // unknown? (seems to be used for internal calculations)
+                //     uint32_t energy_2        = unpack_nibbles(packetbuffer, 39, 6);
+                //     // 						nibbles[45:59]
+                //     uint16_t time_total_high = unpack_nibbles(packetbuffer, 59, 3);
+                //     uint32_t pad_3           = unpack_nibbles(packetbuffer, 62, 5);
+                //     uint64_t energy_high     = (uint64_t)unpack_nibbles(packetbuffer, 67, 4) << 28;
+                //     uint16_t time_on_high    = unpack_nibbles(packetbuffer, 71, 3);
+                //     uint8_t  reset_counter   = unpack_nibbles(packetbuffer, 74, 2);
+                //     uint8_t  flags           = unpack_nibbles(packetbuffer, 76, 1);
+                //     uint8_t  pad_4           = unpack_nibbles(packetbuffer, 77, 1);
+                //     uint16_t received_crc    = 0xffff ^ (unpack_nibbles(packetbuffer, 78, 2) | (unpack_nibbles(packetbuffer, 80, 2) << 8)); // little-endian
+                //     uint16_t calculated_crc  = calc_ec3k_crc(packetbuffer, DECODED_PAKET_LEN_BYTES - 2);
 
-                    // convert to common units
-                    uint64_t energy_Ws = energy_high | energy_low;
-                    const double energy_kWh = energy_Ws / (1000.0 * 3600.0); // Ws to kWh
+                //     // convert to common units
+                //     uint64_t energy_Ws = energy_high | energy_low;
+                //     const double energy_kWh = energy_Ws / (1000.0 * 3600.0); // Ws to kWh
 
-                    if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0) {
-                        if(calculated_crc == received_crc) {
-                            /* clang-format off */
-                            data_t *data = data_make(
-                                "model",            "",             DATA_STRING, "Voltcraft Energy Count 3000",
-                                "id",               "",             DATA_FORMAT, "%04x", DATA_INT, id,
-                                "power",            "Power",        DATA_DOUBLE, power_current,
-                                "energy",           "Energy",       DATA_DOUBLE, energy_kWh,
-                                "fdiff",            "FreqDiff",     DATA_INT,    (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f), // TODO: remove
-                                "mic",              "Integrity",    DATA_STRING, "CRC",
-                                NULL);
-                            /* clang-format on */
+                //     if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0) {
+                //         if(calculated_crc == received_crc) {
+                //             /* clang-format off */
+                //             data_t *data = data_make(
+                //                 "model",            "",             DATA_STRING, "Voltcraft Energy Count 3000",
+                //                 "id",               "",             DATA_FORMAT, "%04x", DATA_INT, id,
+                //                 "power",            "Power",        DATA_DOUBLE, power_current,
+                //                 "energy",           "Energy",       DATA_DOUBLE, energy_kWh,
+                //                 "fdiff",            "FreqDiff",     DATA_INT,    (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f), // TODO: remove
+                //                 "mic",              "Integrity",    DATA_STRING, "CRC",
+                //                 NULL);
+                //             /* clang-format on */
 
-                            decoder_output_data(decoder, data);
-                            rc = 1;
-                            decoder->decode_ok++;
-                            break;
-                        }
-                        else {
-                            decoder_logf(decoder, 1, __func__, "Warning: CRC error, calculated %04X but received %04X", calculated_crc, received_crc);
-                            rc = DECODE_FAIL_MIC;
-                        }
-                    } else {
-                        decoder_logf(decoder, 1, __func__, "Warning: padding bits are not zero, pad_1=%u pad_2=%u pad_3=%u pad_4=%u", pad_1, pad_2, pad_3, pad_4);
-                        rc = DECODE_FAIL_SANITY;
-                    }
-                }
+                //             decoder_output_data(decoder, data);
+                //             rc = 1;
+                //             break;
+                //         }
+                //         else {
+                //             decoder_logf(decoder, 1, __func__, "Warning: CRC error, calculated %04X but received %04X", calculated_crc, received_crc);
+                //             rc = DECODE_FAIL_MIC;
+                //         }
+                //     } else {
+                //         decoder_logf(decoder, 1, __func__, "Warning: padding bits are not zero, pad_1=%u pad_2=%u pad_3=%u pad_4=%u", pad_1, pad_2, pad_3, pad_4);
+                //         rc = DECODE_FAIL_SANITY;
+                //     }
+                // }
 
                 packet = !packet;
-                recpos = 0;
                 packetpos = 0;
+                recpos = 0;
             }
+            else
+            {
+                // reset state to re-sync
+                packet = 0;
+                packetpos = 0;
+                recpos = 0;
+            }
+
+            onecount = 0;
+        }
+
+        if (packetpos >= DECODED_PAKET_LEN_BYTES)
+        {
+            // decode received ec3k packet
+            uint16_t id              = unpack_nibbles(packetbuffer, 1, 4);
+            uint16_t time_total_low  = unpack_nibbles(packetbuffer, 5, 4);
+            uint16_t pad_1           = unpack_nibbles(packetbuffer, 9, 4);
+            uint16_t time_on_low     = unpack_nibbles(packetbuffer, 13, 4);
+            uint32_t pad_2           = unpack_nibbles(packetbuffer, 17, 7);
+            uint32_t energy_low      = unpack_nibbles(packetbuffer, 24, 7);
+            double   power_current   = unpack_nibbles(packetbuffer, 31, 4) / 10.0;
+            double   power_max       = unpack_nibbles(packetbuffer, 35, 4) / 10.0;
+            // unknown? (seems to be used for internal calculations)
+            uint32_t energy_2        = unpack_nibbles(packetbuffer, 39, 6);
+            // 						nibbles[45:59]
+            uint16_t time_total_high = unpack_nibbles(packetbuffer, 59, 3);
+            uint32_t pad_3           = unpack_nibbles(packetbuffer, 62, 5);
+            uint64_t energy_high     = (uint64_t)unpack_nibbles(packetbuffer, 67, 4) << 28;
+            uint16_t time_on_high    = unpack_nibbles(packetbuffer, 71, 3);
+            uint8_t  reset_counter   = unpack_nibbles(packetbuffer, 74, 2);
+            uint8_t  flags           = unpack_nibbles(packetbuffer, 76, 1);
+            uint8_t  pad_4           = unpack_nibbles(packetbuffer, 77, 1);
+            uint16_t received_crc    = 0xffff ^ (unpack_nibbles(packetbuffer, 78, 2) | (unpack_nibbles(packetbuffer, 80, 2) << 8)); // little-endian
+            uint16_t calculated_crc  = calc_ec3k_crc(packetbuffer, DECODED_PAKET_LEN_BYTES - 2);
+
+            // convert to common units
+            uint64_t energy_Ws = energy_high | energy_low;
+            const double energy_kWh = energy_Ws / (1000.0 * 3600.0); // Ws to kWh
+
+            if(pad_1 == 0 && pad_2 == 0 && pad_3 == 0 && pad_4 == 0) {
+                if(calculated_crc == received_crc) {
+                    /* clang-format off */
+                    data_t *data = data_make(
+                        "model",            "",             DATA_STRING, "Voltcraft Energy Count 3000",
+                        "id",               "",             DATA_FORMAT, "%04x", DATA_INT, id,
+                        "power",            "Power",        DATA_DOUBLE, power_current,
+                        "energy",           "Energy",       DATA_DOUBLE, energy_kWh,
+                        "fdiff",            "FreqDiff",     DATA_INT,    (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f), // TODO: remove
+                        "mic",              "Integrity",    DATA_STRING, "CRC",
+                        NULL);
+                    /* clang-format on */
+
+                    decoder_output_data(decoder, data);
+                    rc = 1;
+                    break;
+                }
+                else {
+                    decoder_logf(decoder, 1, __func__, "Warning: CRC error, calculated %04X but received %04X", calculated_crc, received_crc);
+                    rc = DECODE_FAIL_MIC;
+                }
+            } else {
+                decoder_logf(decoder, 1, __func__, "Warning: padding bits are not zero, pad_1=%u pad_2=%u pad_3=%u pad_4=%u", pad_1, pad_2, pad_3, pad_4);
+                rc = DECODE_FAIL_SANITY;
+            }
+
+            // reset state to re-sync
+            packet = 0;
+            packetpos = 0;
+            recpos = 0;
             onecount = 0;
         }
     }
@@ -271,33 +351,39 @@ static int ec3_decode_row(r_device *const decoder, const bitrow_t row, const uin
 static int ec3k_decode(r_device *decoder, bitbuffer_t *bitbuffer, const pulse_data_t *pulses)
 {
     int rc = DECODE_ABORT_EARLY;
-    const int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
+    // const int32_t diffFreq = (int32_t)(pulses->freq2_hz - pulses->freq1_hz + 0.5f);
 
+    // TODO: remove
+    // temporarily set verbose level high to get bitrow output
+    // int orig_verbose = decoder->verbose;
+    // int orig_verbose_bits = decoder->verbose;
+    decoder->verbose = 3;
+    decoder->verbose_bits = 3;
+
+    const uint16_t min_row_bits = PAKET_MIN_BITS; // adapted to sample rate; TODO: samplerate adaption should not be necessary
+    // const uint16_t min_row_bits = (PAKET_MIN_BITS * pulses->sample_rate) / 200000; // adapted to sample rate; TODO: samplerate adaption should not be necessary
+    // const uint16_t max_row_bits = (PAKET_MAX_BITS * pulses->sample_rate) / 200000; // adapted to sample rate; TODO: samplerate adaption should not be necessary
     if (       bitbuffer->num_rows != 1
-            || bitbuffer->bits_per_row[0] < (PAKET_MIN_BITS * pulses->sample_rate / 200000) // adapt to sample rate
-            || bitbuffer->bits_per_row[0] > (PAKET_MAX_BITS * pulses->sample_rate / 200000) // adapt to sample rate
+            || bitbuffer->bits_per_row[0] < min_row_bits
+            // || bitbuffer->bits_per_row[0] > max_row_bits
         )
     {
         decoder_logf(decoder, 3, __func__, "bit_per_row %u out of range", bitbuffer->bits_per_row[0]);
         rc = DECODE_ABORT_LENGTH; // Unrecognized data
     }
-    else if (diffFreq < 20000 || diffFreq > 110000)
-    {
-        decoder_logf(decoder, 3, __func__, "frequency shift %d out of range", diffFreq);
-        rc = DECODE_ABORT_EARLY; // Unrecognized data
-    }
+    // else if (diffFreq < 20000 || diffFreq > 110000)
+    // {
+    //     decoder_logf(decoder, 3, __func__, "frequency shift %d out of range", diffFreq);
+    //     rc = DECODE_ABORT_EARLY; // Unrecognized data
+    // }
     else
     {
-        // TODO: remove
-        // temporarily set verbose level high to get bitrow output
-        // int orig_verbose = decoder->verbose;
-        // int orig_verbose_bits = decoder->verbose;
-        decoder->verbose = 3;
-        decoder->verbose_bits = 3;
         rc = ec3_decode_row(decoder, bitbuffer->bb[0], bitbuffer->bits_per_row[0], pulses);
-        // decoder->verbose = orig_verbose;
-        // decoder->verbose = orig_verbose_bits;
     }
+
+    // TODO: remove
+    // decoder->verbose = orig_verbose;
+    // decoder->verbose = orig_verbose_bits;
 
     return rc;
 }
@@ -342,7 +428,7 @@ const r_device ec3k = {
     .modulation     = FSK_PULSE_PCM,
     .short_width    = BITTIME_US,
     .long_width     = BITTIME_US,
-    .tolerance      = BITTIME_US / 7, // in us ; there can be up to 5 consecutive 0 or 1 pulses and the sync word is 6 bits, so 1/7 should be ok
+    .tolerance      = BITTIME_US / 10, // in us ; there can be up to 5 consecutive 0 or 1 pulses and the sync word is 6 bits, so 15% would be max
     .gap_limit      = 3000,  // some distance above long
     .reset_limit    = 5000, // a bit longer than packet gap
     //.sync_pattern   = EC3K_SYNC_PATTERN,
