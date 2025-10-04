@@ -19,7 +19,7 @@
       - https://batilanblog.wordpress.com/2015/01/11/getting-data-from-voltcraft-energy-count-3000-on-your-computer/
       - https://web.archive.org/web/20121019130917/http://forum.jeelabs.net:80/comment/4020
 
-    The device transmits every 6 seconds (if there is a change in power consumption) or every 30 minutes (if there is no change).
+    The device transmits every 5 seconds (if there is a change in power consumption) or every 30 minutes (if there is no change).
     It uses BFSK modulation with two frequencies between 30 and 80 kHz apart (e.g. 868.297 and 868.336 MHz).
     The bit rate is 20 kbit/s, so bit time is 50 us.
 
