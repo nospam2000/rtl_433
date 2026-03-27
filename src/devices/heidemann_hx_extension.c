@@ -22,7 +22,7 @@ The device uses OOK modulation with Pulse Width Coding (PWM):
 
 The frame length is 13 bits, it is repeated 97 times with a gap of 6200 us between the repeats.
 
-The followinginformation could be part of the message, but is not decoded yet and only a subset can be
+The following information could be part of the message, but is not decoded yet and only a subset can be
 contained because of the short message length:
 - System-ID / House code (8–16 bits): This is the part that forms the "256 radio channels".
   It is randomly generated or permanently assigned during pairing so that neighbors don't interfere with each other.
@@ -58,18 +58,16 @@ static int heidemann_hx_extension_decode(r_device *decoder, bitbuffer_t *bitbuff
         )
         return DECODE_ABORT_LENGTH;
 
-    uint32_t rawval = (b[0] << 5) | (b[1] & 0x1F); // 13 bits
+    uint32_t rawval = (b[0] << 5) | ((b[1] >> 3) & 0x1F); // 13 bits
+    uint32_t melody = (rawval & 0x0F); // 4 bits, there are 8 melodies available
+    uint32_t id = ((rawval >> 4) & 0xFF); // 8 bits and bit 7 is always 0
     uint32_t batt_low = ((rawval >> 12) & 0x01); // 1 bit ???
-    uint32_t unknown = ((rawval >> 8) & 0x01); // 1 bit ???
-    uint32_t id = ((rawval >> 4) & 0x7F); // 7 bits and bit 4 is always 0
-    uint32_t melody = (rawval & 0x0F); // 4 bits ???
 
     /* clang-format off */
     data_t *data = data_make(
             "model",  "",    DATA_STRING, "Heidemann-HX-Extension",
             "id",     "ID",  DATA_INT, id,
             "melody",     "Melody",  DATA_INT, melody,
-            "unknown",       "Unknown",      DATA_INT,    unknown,
             "battery_ok",       "Battery",      DATA_INT,    !batt_low,
             NULL);
     /* clang-format on */
@@ -90,7 +88,6 @@ static char const *const output_fields[] = {
         "model",
         "id",
         "melody",
-        "unknown",
         "battery_ok",
         NULL,
 };
