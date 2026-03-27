@@ -54,7 +54,7 @@ static int heidemann_hx_extension_decode(r_device *decoder, bitbuffer_t *bitbuff
         return DECODE_ABORT_LENGTH;
 
     uint32_t rawval = (b[0] << 5) | ((b[1] >> 3) & 0x1F); // 13 bits
-    uint32_t melody = (rawval & 0x0F); // 4 bits, there are 8 melodies available
+    uint32_t melody = (rawval & 0x0F); // 4 bits
     uint32_t id = ((rawval >> 4) & 0xFF); // 8 bits
     uint32_t batt_ok = ((rawval >> 12) & 0x01); // 1 bit
 
