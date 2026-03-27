@@ -54,16 +54,17 @@ static int heidemann_hx_extension_decode(r_device *decoder, bitbuffer_t *bitbuff
         return DECODE_ABORT_LENGTH;
 
     uint32_t rawval = (b[0] << 5) | ((b[1] >> 3) & 0x1F); // 13 bits
-    uint32_t melody = (rawval & 0x0F); // 4 bits
+    uint32_t unknown = ((rawval >> 12) & 0x01); // 1 bit, unknown purpose, always 1 in my captures; tested for battery status but it is not that
     uint32_t id = ((rawval >> 4) & 0xFF); // 8 bits
-    uint32_t batt_ok = ((rawval >> 12) & 0x01); // 1 bit
+    uint32_t melody = (rawval & 0x0F); // 4 bits
+
+     /* clang-format off */
 
     /* clang-format off */
     data_t *data = data_make(
             "model",      "",        DATA_STRING, "Heidemann-HX-Extension",
             "id",         "ID",      DATA_INT,    id,
             "melody",     "Melody",  DATA_INT,    melody,
-            "battery_ok", "Battery", DATA_INT,    batt_ok,
             NULL);
     /* clang-format on */
 
@@ -83,7 +84,6 @@ static char const *const output_fields[] = {
         "model",
         "id",
         "melody",
-        "battery_ok",
         NULL,
 };
 
