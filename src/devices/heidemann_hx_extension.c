@@ -22,9 +22,8 @@ The device uses OOK modulation with Pulse Width Coding (PWM):
 
 The frame length is 13 bits, it is repeated 97 times with a gap of 6200 us between the repeats.
 
-The following information could be part of the message, but is not decoded yet and only a subset can be
-contained because of the short message length:
-- Battery status (bit 0): 1=battery ok, 0=low battery; this is not yet confirmed
+The frame contains the following information:
+- Battery status (bit 0): 1=battery ok, 0=low battery. This is just guessed and not yet confirmed. I have only seen value 1 here.
 - Device-ID (bit 1 to 8): It is randomly generated on each power on
 - Melody (bit 9 to 12): which of the 16 melodies the receiver should play.
 
@@ -61,10 +60,10 @@ static int heidemann_hx_extension_decode(r_device *decoder, bitbuffer_t *bitbuff
 
     /* clang-format off */
     data_t *data = data_make(
-            "model",  "",    DATA_STRING, "Heidemann-HX-Extension",
-            "id",     "ID",  DATA_INT, id,
-            "melody",     "Melody",  DATA_INT, melody,
-            "battery_ok",       "Battery",      DATA_INT,    batt_ok,
+            "model",      "",        DATA_STRING, "Heidemann-HX-Extension",
+            "id",         "ID",      DATA_INT,    id,
+            "melody",     "Melody",  DATA_INT,    melody,
+            "battery_ok", "Battery", DATA_INT,    batt_ok,
             NULL);
     /* clang-format on */
 
@@ -104,22 +103,17 @@ static char const *const output_fields[] = {
  * - pulse_slicer.h for descriptions
  * - r_device.h for the list of defined names
  *
- * This device is disabled and hidden, it can not be enabled.
- *
- * To enable your device, append it to the list in include/rtl_433_devices.h
- * and sort it into src/CMakeLists.txt or run ./maintainer_update.py
- *
  */
 r_device const heidemann_hx_extension = {
         .name        = "Heidemann HX Extension",
         .modulation  = OOK_PULSE_PWM,
-        .short_width = 332, // in us
-        .long_width  = 676, // in us
-        .gap_limit   = 900,            // some distance above long 820
-        .reset_limit = 7000,            // a bit longer than packet gap 6200
+        .short_width = 332,  // in us
+        .long_width  = 676,  // in us
+        .gap_limit   = 900,  // some distance above long 820
+        .reset_limit = 7000, // a bit longer than packet gap 6200
         .sync_width  = 0,    // No sync bit used
-        .tolerance   = 50, //  in us
+        .tolerance   = 50,   //  in us
+        .disabled    = 0,    // use 0 if there is a MIC, 1 otherwise; this device repeats the frame 97 times, so it is very unlikely to produce false positives and can be enabled by default
         .decode_fn   = &heidemann_hx_extension_decode,
-        .disabled    = 0, // use 0 if there is a MIC, 1 otherwise
         .fields      = output_fields,
 };
