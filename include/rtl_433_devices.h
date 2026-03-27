@@ -307,6 +307,7 @@
     DECL(thermopro_tp211b) \
     DECL(tpms_trw_ook) \
     DECL(tpms_trw_fsk) \
+    DECL(heidemann_hx_extension) \
 
     /* Add new decoders here. */
 
