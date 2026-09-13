@@ -317,6 +317,24 @@ static data_t *append_str(data_t *data, enum UnitType unit_type, uint8_t value_t
 
 // key_extra and pretty_extra args only used for history_months and history_hours.
 // Note: this should process and vif_combinable from a table
+static void m_bus_volume_storage(uint8_t dif_sn, uint8_t *storage_no, char const **key_extra, char const **pretty_extra)
+{
+    *storage_no = dif_sn;
+    *key_extra = NULL;
+    *pretty_extra = NULL;
+
+    // In wM-Bus, storage numbers 8..19 are the month-history slots. Keep the
+    // original raw storage number in the emitted key (for example storage 8 ->
+    // inst_volume_m1_8), while appending the month-history label as a suffix.
+    // Other valid storage numbers (for example storage 1 for end-of-year
+    // readings) must keep their original value and must not be silently dropped
+    // by the generic volume logic.
+    if (dif_sn >= 8 && dif_sn <= 19) {
+        *key_extra = history_months[dif_sn - 8][0];
+        *pretty_extra = history_months[dif_sn - 8][1];
+    }
+}
+
 static data_t *append_val(data_t *data, enum UnitType unit_type, uint8_t value_type, uint8_t sn,
     char const *key_extra, char const *pretty_extra, int64_t val, int exp)
 {
@@ -573,14 +591,15 @@ static int m_bus_decode_records(data_t **inout_data, const uint8_t *b, uint8_t d
                 data = append_val(data, kEnergy_J, dif_ff, dif_sn, "", "", val, vif_uam&0x7);
             } else if ((vif_uam&0xF8) == 0x10) {
                 // E001 0nnn    Volume  10^nnn-6 m3  0.001l to 10000l
-
-                if (dif_sn < 8) {
-                    data = append_val(data, kVolume, dif_ff, dif_sn, "", "", val, -6 + (vif_uam&0x7));
-                } else if (dif_sn <= 19) {
-                    dif_sn -= 8;
-                    data = append_val(data, kVolume, dif_ff, dif_sn,
-                        history_months[dif_sn][0], history_months[dif_sn][1], val, -6 + (vif_uam&0x7));
-                }
+                // Keep valid non-month history storage numbers (for example 1 = yearly)
+                // unchanged; only the 8..19 range is remapped to the month history names.
+                uint8_t volume_sn = dif_sn;
+                char const *key_extra = NULL;
+                char const *pretty_extra = NULL;
+                m_bus_volume_storage(dif_sn, &volume_sn, &key_extra, &pretty_extra);
+                data = append_val(data, kVolume, dif_ff, volume_sn,
+                    key_extra ? key_extra : "", pretty_extra ? pretty_extra : "",
+                    val, -6 + (vif_uam&0x7));
 
             } else if ((vif_uam&0xF8) == 0x18) {
                 // E001 1nnn    Mass    10^nnn-3 kg  0.001kg to 10000kg
