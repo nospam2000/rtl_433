@@ -7,6 +7,13 @@ target_link_libraries(data-test data)
 
 add_test(data-test data-test)
 
+add_executable(wmbus_warmwater_regression wmbus_warmwater_regression.c)
+target_link_libraries(wmbus_warmwater_regression r_433)
+if(UNIX)
+    target_link_libraries(wmbus_warmwater_regression m)
+endif()
+add_test(wmbus_warmwater_regression_test wmbus_warmwater_regression)
+
 add_executable(baseband-test baseband-test.c ../src/baseband.c ../src/logger.c)
 
 if(UNIX)
