@@ -577,7 +577,8 @@ static int m_bus_decode_records(data_t **inout_data, const uint8_t *b, uint8_t d
                 // unchanged; only the 8..19 range is remapped to the month history names but keeps its
                 // storage number because one packet can simulataneonsly contain storage number 0 and 8.
                 // Only changing the storage number of the flow value but no the corresponding date value will mix
-                // up the data when a msg contains data for both storage numbers.
+                // up the data when a msg contains data for both storage numbers and the resulting storage number
+                // will become 0.
                 if (dif_sn >= 8 && dif_sn <= 19) {
                     uint8_t hist_idx = dif_sn - 8; // map to month-history index 0..11
                     data = append_val(data, kVolume, dif_ff, dif_sn,
