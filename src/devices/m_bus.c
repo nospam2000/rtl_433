@@ -315,6 +315,8 @@ static data_t *append_str(data_t *data, enum UnitType unit_type, uint8_t value_t
 
 }
 
+// key_extra and pretty_extra args only used for history_months and history_hours.
+// Note: this should process and vif_combinable from a table
 static data_t *append_val(data_t *data, enum UnitType unit_type, uint8_t value_type, uint8_t sn,
     char const *key_extra, char const *pretty_extra, int64_t val, int exp)
 {
