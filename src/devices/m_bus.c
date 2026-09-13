@@ -573,12 +573,11 @@ static int m_bus_decode_records(data_t **inout_data, const uint8_t *b, uint8_t d
                 data = append_val(data, kEnergy_J, dif_ff, dif_sn, "", "", val, vif_uam&0x7);
             } else if ((vif_uam&0xF8) == 0x10) {
                 // E001 0nnn    Volume  10^nnn-6 m3  0.001l to 10000l
-                // Keep valid non-month history storage numbers (for example 0 = current and 1 = yearly)
-                // unchanged; only the 8..19 range is remapped to the month history names but keeps its
+                // Keep valid non-month history storage numbers (for example 0 = current and 1 = yearly) unchanged.
+                // Only the 8..19 storage number range is remapped to the month history names but keeps its
                 // storage number because one packet can simulataneonsly contain storage number 0 and 8.
                 // Only changing the storage number of the flow value but no the corresponding date value will mix
-                // up the data when a msg contains data for both storage numbers and the resulting storage number
-                // will become 0.
+                // up the data when a msg contains data for both storage numbers.
                 if (dif_sn >= 8 && dif_sn <= 19) {
                     uint8_t hist_idx = dif_sn - 8; // map to month-history index 0..11
                     data = append_val(data, kVolume, dif_ff, dif_sn,
